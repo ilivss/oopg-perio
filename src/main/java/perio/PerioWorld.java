@@ -19,6 +19,11 @@ public class PerioWorld extends GameEngine {
 
     // Game vars
     public static String MEDIA_PATH = "src/main/java/perio/media/";
+    public static int worldWidth = 840;
+    public static int worldHeight = 1400;
+    public static int zoomWidth = 840;
+    public static int zoomHeight = 700;
+
     private IPersistence persistence;
     private TextObject dashboardText;
 
@@ -43,11 +48,6 @@ public class PerioWorld extends GameEngine {
 
     @Override
     public void setupGame() {
-        int worldWidth = 840;
-        int worldHeight = 1400;
-        int zoomWidth = 840;
-        int zoomHeight = 700;
-
         // init
         initSound();
         initDashboard(zoomWidth, 100);
@@ -56,7 +56,7 @@ public class PerioWorld extends GameEngine {
 
         initGameObjects();
 
-        createVieWithViewport(worldWidth, worldHeight, zoomWidth, zoomHeight);
+        createVieWithViewport();
     }
 
     @Override
@@ -85,7 +85,7 @@ public class PerioWorld extends GameEngine {
     private void initDashboard(int dashboardWidth, int dashboardHeight) {
         Dashboard dashboard = new Dashboard(0, 0, dashboardWidth, dashboardHeight);
         dashboardText = new TextObject("test", 40);
-        dashboardText.setForeColor(255,255,255,255);
+        dashboardText.setForeColor(255, 255, 255, 255);
 
         dashboard.addGameObject(dashboardText);
         addDashboard(dashboard);
@@ -99,10 +99,10 @@ public class PerioWorld extends GameEngine {
 
         // Players
         playerOne = new Player(this, 1);
-        addGameObject(playerOne, 350, 700);
+        addGameObject(playerOne, 50, worldHeight - playerOne.getHeight());
 
         playerTwo = new Player(this, 2);
-        addGameObject(playerTwo, 350, 700);
+        addGameObject(playerTwo, 50 + playerOne.getWidth(), worldHeight - playerTwo.getHeight());
 
         // Follow Object
         followObject = new FollowObject(this, playerOne, playerOne);
@@ -169,14 +169,9 @@ public class PerioWorld extends GameEngine {
 
     /**
      * Creeert de view een met Central Following Viewport
-     *
-     * @param worldWidth  Breedte van de wereld
-     * @param worldHeight Hoogte van de wereld
-     * @param zoomWidth   Breedte van het scherm
-     * @param zoomHeight  Hoogte van het scherm
      */
 
-    private void createVieWithViewport(int worldWidth, int worldHeight, int zoomWidth, int zoomHeight) {
+    private void createVieWithViewport() {
         CenterFollowingViewport viewPort = new CenterFollowingViewport(followObject, zoomWidth, zoomHeight);
         View view = new View(viewPort, worldWidth, worldHeight);
 
