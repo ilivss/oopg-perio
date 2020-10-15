@@ -18,7 +18,16 @@ public class FollowObject extends GameObject {
 
     @Override
     public void update() {
-        setY(Math.min(1050, (playerOne.getY() + playerTwo.getY()) / 2 ));
+        /**
+         * Dit stukje code zorgt ervoor dat de view port binnen de boundaries van de view blijft.
+         */
+        if ((playerOne.getY() + playerTwo.getY())/ 2 < (float) PerioWorld.zoomHeight / 2 ){
+            setY((float) PerioWorld.zoomHeight / 2);
+        } else if ((playerOne.getY() + playerTwo.getY())/ 2  > PerioWorld.worldHeight - ((float) PerioWorld.zoomHeight / 2)) {
+            setY(PerioWorld.worldHeight - ((float) PerioWorld.zoomHeight / 2));
+        } else {
+            setY((playerOne.getY() + playerTwo.getY())/ 2);
+        }
     }
 
     @Override
