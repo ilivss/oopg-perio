@@ -19,7 +19,7 @@ public class FollowObject extends GameObject {
 
     @Override
     public void update() {
-        setY(Math.min(350, (playerOne.getY() + playerTwo.getY()) / 2 ));
+        setY(Math.min(1050, (playerOne.getY() + playerTwo.getY()) / 2 ));
     }
 
     @Override

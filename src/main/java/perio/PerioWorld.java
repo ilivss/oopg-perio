@@ -24,6 +24,7 @@ public class PerioWorld extends GameEngine {
     // Game vars
     public static String MEDIA_PATH = "src/main/java/perio/media/";
     private IPersistence persistence;
+    private TextObject dashboardText;
 
     // Game Objects
     private Player playerOne;
@@ -47,7 +48,7 @@ public class PerioWorld extends GameEngine {
     @Override
     public void setupGame() {
         int worldWidth = 840;
-        int worldHeight = 700;
+        int worldHeight = 1400;
         int zoomWidth = 840;
         int zoomHeight = 700;
 
@@ -87,7 +88,11 @@ public class PerioWorld extends GameEngine {
      */
     private void initDashboard(int dashboardWidth, int dashboardHeight) {
         Dashboard dashboard = new Dashboard(0, 0, dashboardWidth, dashboardHeight);
-        dashbo
+        dashboardText = new TextObject("test", 40);
+        dashboardText.setForeColor(255,255,255,255);
+
+        dashboard.addGameObject(dashboardText);
+        addDashboard(dashboard);
     }
 
     /**
@@ -103,7 +108,7 @@ public class PerioWorld extends GameEngine {
         addGameObject(playerTwo);
 
         // Follow Object
-        followObject = new FollowObject(this, playerOne, playerTwo);
+        followObject = new FollowObject(this, playerOne, playerOne);
         addGameObject(followObject);
     }
 
@@ -112,10 +117,10 @@ public class PerioWorld extends GameEngine {
      */
     private void initTileMap() {
         // Load Sprites
-        Sprite castleLeftSprite = new Sprite(MEDIA_PATH.concat("tiles/castleLeft.png"));
-        Sprite castleMidSprite = new Sprite(MEDIA_PATH.concat("tiles/castleMid.png"));
-        Sprite castleRightSprite = new Sprite(MEDIA_PATH.concat("tiles/castleRight.png"));
-        Sprite castleCenterSprite = new Sprite(MEDIA_PATH.concat("tiles/castleCenter.png"));
+        Sprite castleLeftSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/castleLeft.png"));
+        Sprite castleMidSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/castleMid.png"));
+        Sprite castleRightSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/castleRight.png"));
+        Sprite castleCenterSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/castleCenter.png"));
 
 
         // Create tile types with the right Tile class and sprite
@@ -127,6 +132,17 @@ public class PerioWorld extends GameEngine {
         int tileSize = 70;
         TileType[] tileTypes = {castleLeftTile, castleMidTile, castleRightTile, castleCenterTile};
         int tilesMap[][] = {
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -169,6 +185,6 @@ public class PerioWorld extends GameEngine {
 
         setView(view);
         size(zoomWidth, zoomHeight);
-        view.setBackground(loadImage(MEDIA_PATH.concat("background.png")));
+        view.setBackground(loadImage(MEDIA_PATH.concat("backgrounds/bg.png")));
     }
 }
