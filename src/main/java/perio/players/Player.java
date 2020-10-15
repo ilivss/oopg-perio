@@ -23,10 +23,13 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
     private final PerioWorld world;
     private String name;
     Direction dirrr;
+    private int player;
+    private boolean left, right, up, down;
 
-    public Player(PerioWorld world) {
+    public Player(PerioWorld world, int player) {
         super(new Sprite(PerioWorld.MEDIA_PATH.concat("characters/mario.png")), 45);
         this.world = world;
+        this.player = player;
 
         setCurrentFrameIndex(0);
         setFriction(0.10f);
@@ -35,29 +38,56 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
 
     @Override
     public void update() {
+        int playerSpeed = 5;
+
         if (getX() > getPrevX()) {
             dirrr = Direction.RIGHT;
         } else {
             dirrr = Direction.LEFT;
         }
+
+        //beweeg de speler
+        if (right == true) {
+            setDirectionSpeed(90, playerSpeed);
+            walkingAnimation(Direction.RIGHT);
+        }
+
+        if (left == true) {
+            setDirectionSpeed(270, playerSpeed);
+            walkingAnimation(Direction.RIGHT);
+        }
     }
 
     @Override
     public void keyPressed(int keyCode, char key) {
-        int playerSpeed = 5;
 
-        if (keyCode == world.RIGHT && this.x + this.width < world.width) {
-            setDirectionSpeed(90, playerSpeed);
-            walkingAnimation(Direction.RIGHT);
-        } else if (keyCode == world.DOWN) {
-            setFriction(0.02f);
-            crouchAnimation();
-        } else if (keyCode == world.LEFT && this.x > 0) {
-            setDirectionSpeed(270, playerSpeed);
-            walkingAnimation(Direction.RIGHT);
-        } else if (key == ' ') {
-            System.out.println("prevY:" + this.getPrevY());
-            System.out.println("Y: " + this.getY());
+
+        if (this.player == 1) {
+            if (keyCode == world.RIGHT && this.x + this.width < world.width) {
+                right = true;
+            } else if (keyCode == world.DOWN) {
+                setFriction(0.02f);
+                crouchAnimation();
+            } else if (this.player == 1 && keyCode == world.LEFT && this.x > 0)  {
+                left = true;
+            } else if (key == ' ') {
+                System.out.println("prevY:" + this.getPrevY());
+                System.out.println("Y: " + this.getY());
+            }
+        }
+
+        if (this.player == 2) {
+            if (keyCode == 68 && this.x + this.width < world.width) {
+                right = true;
+            } else if (keyCode == 83 ) {
+                setFriction(0.02f);
+                crouchAnimation();
+            } else if (keyCode == 65 && this.x > 0) {
+                left = true;
+            } else if (key == ' ') {
+                System.out.println("prevY:" + this.getPrevY());
+                System.out.println("Y: " + this.getY());
+            }
         }
     }
 
@@ -81,6 +111,24 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
 //        if (keyCode == world.RIGHT || keyCode == world.LEFT) {
 //            setCurrentFrameIndex(0);
 //        }
+
+         if (this.player == 1) {
+            if (keyCode == world.RIGHT && this.x + this.width < world.width) {
+                right = false;
+
+            }  else if (this.player == 1 && keyCode == world.LEFT && this.x > 0)  {
+                left = false;
+            }
+        }
+
+        if (this.player == 2) {
+            if (keyCode == 68 ) {
+                right = false;
+            }
+             else if (keyCode == 65) {
+                left = false;
+            }
+        }
     }
 
     @Override

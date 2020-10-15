@@ -93,6 +93,7 @@ public class PerioWorld extends GameEngine {
 
         dashboard.addGameObject(dashboardText);
         addDashboard(dashboard);
+
     }
 
     /**
@@ -101,10 +102,10 @@ public class PerioWorld extends GameEngine {
     private void initGameObjects() {
 
         // Players
-        playerOne = new Player(this);
+        playerOne = new Player(this, 1);
         addGameObject(playerOne);
 
-        playerTwo = new Player(this);
+        playerTwo = new Player(this, 2);
         addGameObject(playerTwo);
 
         // Follow Object
