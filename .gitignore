@@ -34,8 +34,9 @@ hs_err_pid*
 # Waterworld example log and persistence file
 src/main/java/nl/han/ica/waterworld/media/bubblesPopped.txt
 
-# OOPG engine log file
+# OOPG
 src/main/java/nl/han/ica/oopdprocessingenginehan/logger/Log.log
+oopg.log
 
 # Visual Studio Code
 .vscode
