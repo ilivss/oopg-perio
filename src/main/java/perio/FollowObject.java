@@ -1,7 +1,6 @@
 package perio;
 
 import nl.han.ica.oopg.objects.GameObject;
-import perio.players.Player;
 import processing.core.PGraphics;
 
 public class FollowObject extends GameObject {

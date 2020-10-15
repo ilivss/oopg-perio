@@ -10,14 +10,10 @@ import nl.han.ica.oopg.sound.Sound;
 import nl.han.ica.oopg.tile.TileMap;
 import nl.han.ica.oopg.tile.TileType;
 import nl.han.ica.oopg.view.CenterFollowingViewport;
-import nl.han.ica.oopg.view.EdgeFollowingViewport;
 import nl.han.ica.oopg.view.View;
 
 // Eigen classes
-import perio.players.Player;
 import perio.tiles.FloorTile;
-
-import java.util.ArrayList;
 
 public class PerioWorld extends GameEngine {
 
@@ -103,10 +99,10 @@ public class PerioWorld extends GameEngine {
 
         // Players
         playerOne = new Player(this, 1);
-        addGameObject(playerOne);
+        addGameObject(playerOne, 350, 700);
 
         playerTwo = new Player(this, 2);
-        addGameObject(playerTwo);
+        addGameObject(playerTwo, 350, 700);
 
         // Follow Object
         followObject = new FollowObject(this, playerOne, playerOne);
