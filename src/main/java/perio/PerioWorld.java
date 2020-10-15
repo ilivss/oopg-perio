@@ -14,6 +14,7 @@ import nl.han.ica.oopg.view.View;
 
 // Eigen classes
 import perio.tiles.FloorTile;
+import perio.tiles.SwitchTile;
 
 public class PerioWorld extends GameEngine {
 
@@ -119,6 +120,7 @@ public class PerioWorld extends GameEngine {
         Sprite castleRightSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/castleRight.png"));
         Sprite castleCenterSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/castleCenter.png"));
 
+        Sprite switchSprite = new Sprite(MEDIA_PATH.concat("tiles/switch/laserSwitchYellowOff.png"));
 
         // Create tile types with the right Tile class and sprite
         TileType<FloorTile> castleLeftTile = new TileType<>(FloorTile.class, castleLeftSprite);
@@ -126,8 +128,10 @@ public class PerioWorld extends GameEngine {
         TileType<FloorTile> castleRightTile = new TileType<>(FloorTile.class, castleRightSprite);
         TileType<FloorTile> castleCenterTile = new TileType<>(FloorTile.class, castleCenterSprite);
 
+        TileType<SwitchTile> switchTile = new TileType<>(SwitchTile.class, switchSprite);
+
         int tileSize = 70;
-        TileType[] tileTypes = {castleLeftTile, castleMidTile, castleRightTile, castleCenterTile};
+        TileType[] tileTypes = {castleLeftTile, castleMidTile, castleRightTile, castleCenterTile, switchTile};
         int tilesMap[][] = {
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -147,7 +151,7 @@ public class PerioWorld extends GameEngine {
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, 4, -1, -1, -1, -1},
                 {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
                 {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
         };
