@@ -87,7 +87,7 @@ public class PerioWorld extends GameEngine {
      */
     private void initDashboard(int dashboardWidth, int dashboardHeight) {
         Dashboard dashboard = new Dashboard(0, 0, dashboardWidth, dashboardHeight);
-        dashbo
+
     }
 
     /**
@@ -96,10 +96,10 @@ public class PerioWorld extends GameEngine {
     private void initGameObjects() {
 
         // Players
-        playerOne = new Player(this);
+        playerOne = new Player(this, 1);
         addGameObject(playerOne);
 
-        playerTwo = new Player(this);
+        playerTwo = new Player(this, 2);
         addGameObject(playerTwo);
 
         // Follow Object
