@@ -34,15 +34,15 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
 
         setCurrentFrameIndex(0);
         setFriction(0.10f);
-        setGravity(0.3f);
+        setGravity(0.5f);
     }
 
     @Override
     public void update() {
         float offset = 10f;
+
         // Update horizontal direction for animation methods
         if (direction == Direction.UP) {
-            // TODO: Alleen springen wanner y == prevY. Momenteel zijn ze niet gelijk als player stil staat!
             jumpAnimation();
             setDirectionSpeed(0, 20);
         } else if (direction == Direction.RIGHT) {
@@ -55,9 +55,11 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
         } else if (direction == Direction.LEFT) {
             walkAnimation();
             setDirectionSpeed(270, 5);
+        } else if (direction == Direction.IDLE) {
+            setCurrentFrameIndex(0);
         }
 
-//        // Boundaries
+//      Boundaries
         if (getX() < 0) {
             setxSpeed(0);
             setX(0);
@@ -66,15 +68,13 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
             setySpeed(0);
             setY(0);
         }
-        if (getX() > world.width - this.width) {
+        if (getX() >= PerioWorld.worldWidth - this.width) {
             setxSpeed(0);
-            setX(world.width - this.width);
+            setX(PerioWorld.worldWidth - this.width - 1);
         }
-        if (getY() > world.getView().getWorldHeight() - this.height) {
-            // Moet world.getView().getWorldHeight() gebruiken ipv world.height
-            // omdat world.height de hoogte van de view port is en niet de van de wereld
+        if (getY() >= PerioWorld.worldHeight - this.height) {
             setySpeed(0);
-            setY(world.getView().getWorldHeight() - this.height);
+            setY(PerioWorld.worldHeight - this.height);
         }
     }
 
@@ -83,7 +83,9 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
         if (this.player == 1) {
             // Controls Player 1
             if (keyCode == world.UP) {
-                direction = Direction.UP;
+                if (Math.floor(getY()) == Math.floor(getPrevY())) {
+                    direction = Direction.UP;
+                }
             } else if (keyCode == world.RIGHT) {
                 direction = Direction.RIGHT;
             } else if (keyCode == world.DOWN) {
@@ -95,7 +97,9 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
         } else if (this.player == 2) {
             // Controls Player 2
             if (keyCode == 87) { // W
-                direction = Direction.UP;
+                if (Math.floor(getY()) == Math.floor(getPrevY())) {
+                    direction = Direction.UP;
+                }
             }
             if (keyCode == 68) { // D
                 direction = Direction.RIGHT;
@@ -113,7 +117,7 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
     public void keyReleased(int keyCode, char key) {
         direction = Direction.IDLE;
         setFriction(0.10f);
-        setCurrentFrameIndex(37);
+        setCurrentFrameIndex(0);
     }
 
     @Override
@@ -158,6 +162,6 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
     }
 
     private void jumpAnimation() {
-        setCurrentFrameIndex(44);
+        setCurrentFrameIndex(36);
     }
 }
