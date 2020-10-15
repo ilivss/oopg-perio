@@ -39,19 +39,18 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
 
     @Override
     public void update() {
+        float offset = 10f;
         // Update horizontal direction for animation methods
         if (direction == Direction.UP) {
-            if (Math.floor(getY()) == Math.floor(getPrevY()+2)) {
-                jumpAnimation();
-                setDirectionSpeed(0, 20);
-            }
+            // TODO: Alleen springen wanner y == prevY. Momenteel zijn ze niet gelijk als player stil staat!
+            jumpAnimation();
+            setDirectionSpeed(0, 20);
         } else if (direction == Direction.RIGHT) {
             walkAnimation();
             setDirectionSpeed(90, 5);
         } else if (direction == Direction.DOWN) {
-//            crouchAnimation();
-//            setFriction(0.05f);
-            System.out.println(Math.floor(getY()) + " " + Math.floor(getPrevY() ));
+            crouchAnimation();
+            setFriction(0.05f);
 
         } else if (direction == Direction.LEFT) {
             walkAnimation();
