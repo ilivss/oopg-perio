@@ -2,6 +2,7 @@ package perio;
 
 import nl.han.ica.oopg.dashboard.Dashboard;
 import nl.han.ica.oopg.engine.GameEngine;
+import nl.han.ica.oopg.objects.GameObject;
 import nl.han.ica.oopg.objects.Sprite;
 import nl.han.ica.oopg.objects.TextObject;
 import nl.han.ica.oopg.persistence.FilePersistence;
@@ -13,8 +14,12 @@ import nl.han.ica.oopg.view.CenterFollowingViewport;
 import nl.han.ica.oopg.view.View;
 
 // Eigen classes
+import perio.buttons.Button;
+import perio.buttons.PushButton;
+import perio.buttons.SwitchButton;
+import perio.obstacles.DummyTarget;
+import perio.obstacles.ITarget;
 import perio.tiles.FloorTile;
-import perio.tiles.SwitchTile;
 
 public class PerioWorld extends GameEngine {
 
@@ -32,6 +37,10 @@ public class PerioWorld extends GameEngine {
     private Player playerOne;
     private Player playerTwo;
     private FollowObject followObject;
+
+    private Button testPushButton;
+    private Button testSwitchButton;
+    private ITarget dummyTarget;
 
     // Sounds
     private Sound backgroundSound;
@@ -100,14 +109,28 @@ public class PerioWorld extends GameEngine {
 
         // Players
         playerOne = new Player(this, 1);
-        addGameObject(playerOne, 50, worldHeight - playerOne.getHeight());
+        addGameObject(playerOne, 50, worldHeight - 140 - playerOne.getHeight());
 
         playerTwo = new Player(this, 2);
-        addGameObject(playerTwo, 50 + playerOne.getWidth(), worldHeight - playerTwo.getHeight());
+        addGameObject(playerTwo, 50 + playerOne.getWidth(), worldHeight - 140 - playerTwo.getHeight());
 
         // Follow Object
         followObject = new FollowObject(this, playerOne, playerOne);
         addGameObject(followObject);
+
+        // Buttons
+        testPushButton = new PushButton();
+        testSwitchButton = new SwitchButton();
+
+        // Dummy Target
+        dummyTarget = new DummyTarget();
+
+        testPushButton.addTarget(dummyTarget);
+        testSwitchButton.addTarget(dummyTarget);
+        addGameObject(testPushButton, 300, worldHeight - 140 - testPushButton.getHeight());
+        addGameObject(testSwitchButton, 500, worldHeight - 140 - testSwitchButton.getHeight());
+        addGameObject((GameObject) dummyTarget, 650, worldHeight - 140 - ((GameObject) dummyTarget).getHeight());
+
     }
 
     /**
@@ -120,7 +143,10 @@ public class PerioWorld extends GameEngine {
         Sprite castleRightSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/castleRight.png"));
         Sprite castleCenterSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/castleCenter.png"));
 
-        Sprite switchSprite = new Sprite(MEDIA_PATH.concat("tiles/switch/laserSwitchYellowOff.png"));
+        Sprite buttonOnSprite = new Sprite(MEDIA_PATH.concat("tiles/buttons/buttonOn.png"));
+        Sprite buttonOffSprite = new Sprite(MEDIA_PATH.concat("tiles/buttons/buttonOff.png"));
+        Sprite switchOnSprite = new Sprite(MEDIA_PATH.concat("tiles/buttons/laserSwitchYellowOn.png"));
+        Sprite switchOffSprite = new Sprite(MEDIA_PATH.concat("tiles/buttons/laserSwitchYellowOff.png"));
 
         // Create tile types with the right Tile class and sprite
         TileType<FloorTile> castleLeftTile = new TileType<>(FloorTile.class, castleLeftSprite);
@@ -128,10 +154,8 @@ public class PerioWorld extends GameEngine {
         TileType<FloorTile> castleRightTile = new TileType<>(FloorTile.class, castleRightSprite);
         TileType<FloorTile> castleCenterTile = new TileType<>(FloorTile.class, castleCenterSprite);
 
-        TileType<SwitchTile> switchTile = new TileType<>(SwitchTile.class, switchSprite);
-
         int tileSize = 70;
-        TileType[] tileTypes = {castleLeftTile, castleMidTile, castleRightTile, castleCenterTile, switchTile};
+        TileType[] tileTypes = {castleCenterTile, castleLeftTile, castleMidTile, castleRightTile};
         int tilesMap[][] = {
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -151,12 +175,16 @@ public class PerioWorld extends GameEngine {
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, 4, -1, -1, -1, -1},
-                {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
-                {3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         };
 
         tileMap = new TileMap(tileSize, tileTypes, tilesMap);
+
+        // Initialize On Sprites for Buttons
+//        ((PushButtonTile) tileMap.getTileOnIndex(4, 17)).setOnSprite(buttonOnSprite);
+//        ((SwitchTile) tileMap.getTileOnIndex(7, 17)).setOnSprite(switchOnSprite);
     }
 
     /**
