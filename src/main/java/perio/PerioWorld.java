@@ -4,6 +4,7 @@ import nl.han.ica.oopg.dashboard.Dashboard;
 import nl.han.ica.oopg.engine.GameEngine;
 import nl.han.ica.oopg.objects.GameObject;
 import nl.han.ica.oopg.objects.Sprite;
+import nl.han.ica.oopg.objects.SpriteObject;
 import nl.han.ica.oopg.objects.TextObject;
 import nl.han.ica.oopg.persistence.FilePersistence;
 import nl.han.ica.oopg.persistence.IPersistence;
@@ -17,9 +18,14 @@ import nl.han.ica.oopg.view.View;
 import perio.buttons.Button;
 import perio.buttons.PushButton;
 import perio.buttons.SwitchButton;
-import perio.obstacles.DummyTarget;
-import perio.obstacles.ITarget;
+import perio.collectibles.Coin;
+import perio.collectibles.Collectible;
+import perio.collectibles.Gem;
+import perio.obstacles.IObstacle;
+import perio.obstacles.Lift;
 import perio.tiles.FloorTile;
+
+import java.util.ArrayList;
 
 public class PerioWorld extends GameEngine {
 
@@ -37,10 +43,9 @@ public class PerioWorld extends GameEngine {
     private Player playerOne;
     private Player playerTwo;
     private FollowObject followObject;
-
-    private Button testPushButton;
-    private Button testSwitchButton;
-    private ITarget dummyTarget;
+    private ArrayList<Collectible> collectibles;
+    private ArrayList<Button> buttons;
+    private ArrayList<IObstacle> obstacles;
 
     // Sounds
     private Sound backgroundSound;
@@ -115,22 +120,33 @@ public class PerioWorld extends GameEngine {
         addGameObject(playerTwo, 50 + playerOne.getWidth(), worldHeight - 140 - playerTwo.getHeight());
 
         // Follow Object
-        followObject = new FollowObject(this, playerOne, playerOne);
+        followObject = new FollowObject(this, playerOne, playerTwo);
         addGameObject(followObject);
 
+        // Collectibles
+        collectibles = new ArrayList<>();
+
+        collectibles.add(new Coin(this));
+        collectibles.add(new Gem(this));
+
+        addGameObject(collectibles.get(0), 3 * tileMap.getTileSize(), worldHeight - 8 * tileMap.getTileSize());
+        addGameObject(collectibles.get(1), 4 * tileMap.getTileSize(), worldHeight - 8 * tileMap.getTileSize());
+
         // Buttons
-        testPushButton = new PushButton();
-        testSwitchButton = new SwitchButton();
+        buttons = new ArrayList<>();
+
+        buttons.add(new PushButton());
+        buttons.add(new SwitchButton());
+
+        addGameObject(buttons.get(0), 300, worldHeight - 2 * tileMap.getTileSize() - buttons.get(0).getHeight());
+        addGameObject(buttons.get(1), 500, worldHeight - 2 * tileMap.getTileSize() - buttons.get(1).getHeight());
 
         // Dummy Target
-        dummyTarget = new DummyTarget();
+        obstacles = new ArrayList<>();
 
-        testPushButton.addTarget(dummyTarget);
-        testSwitchButton.addTarget(dummyTarget);
-        addGameObject(testPushButton, 300, worldHeight - 140 - testPushButton.getHeight());
-        addGameObject(testSwitchButton, 500, worldHeight - 140 - testSwitchButton.getHeight());
-        addGameObject((GameObject) dummyTarget, 650, worldHeight - 140 - ((GameObject) dummyTarget).getHeight());
+        obstacles.add(new Lift(this,worldHeight - 7 * tileMap.getTileSize()));
 
+        addGameObject((SpriteObject) obstacles.get(0), 700, worldHeight - 2 * tileMap.getTileSize() - ((SpriteObject) obstacles.get(0)).getHeight());
     }
 
     /**
@@ -171,7 +187,7 @@ public class PerioWorld extends GameEngine {
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {2, 2, 2, 2, 2, 2, 2, 2, 2, 3, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -211,4 +227,8 @@ public class PerioWorld extends GameEngine {
         size(zoomWidth, zoomHeight);
         view.setBackground(loadImage(MEDIA_PATH.concat("backgrounds/bg.png")));
     }
+
+    /**
+     * Helper functie om
+     */
 }
