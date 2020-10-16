@@ -1,6 +1,7 @@
 package perio;
 
 import nl.han.ica.oopg.collision.CollidedTile;
+import nl.han.ica.oopg.collision.CollisionSide;
 import nl.han.ica.oopg.collision.ICollidableWithTiles;
 import nl.han.ica.oopg.exceptions.TileNotFoundException;
 import nl.han.ica.oopg.objects.AnimatedSpriteObject;
@@ -127,7 +128,12 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
             if (ct.getTile() instanceof FloorTile) {
                 try {
                     vector = world.getTileMap().getTilePixelLocation(ct.getTile());
-                    setY(vector.y - getHeight());
+
+                    if (ct.getCollisionSide() == CollisionSide.BOTTOM){
+                        setY(vector.y + world.getTileMap().getTileSize());
+                    } else {
+                        setY(vector.y - getHeight());
+                    }
                 } catch (TileNotFoundException e) {
                     e.printStackTrace();
                 }
