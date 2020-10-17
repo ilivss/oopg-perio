@@ -1,5 +1,5 @@
 package perio.obstacles;
-public interface ITarget {
+public interface IObstacle {
 
     void handleTarget();
 }
