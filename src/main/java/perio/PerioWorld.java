@@ -2,7 +2,6 @@ package perio;
 
 import nl.han.ica.oopg.dashboard.Dashboard;
 import nl.han.ica.oopg.engine.GameEngine;
-import nl.han.ica.oopg.objects.GameObject;
 import nl.han.ica.oopg.objects.Sprite;
 import nl.han.ica.oopg.objects.SpriteObject;
 import nl.han.ica.oopg.objects.TextObject;
@@ -31,10 +30,10 @@ public class PerioWorld extends GameEngine {
 
     // Game vars
     public static String MEDIA_PATH = "src/main/java/perio/media/";
-    public static int worldWidth = 840;
-    public static int worldHeight = 1400;
-    public static int zoomWidth = 840;
-    public static int zoomHeight = 700;
+    public static int WORLDWIDTH = 840;
+    public static int WORLDHEIGHT = 1400;
+    public static int ZOOMWIDTH = 840;
+    public static int ZOOMHEIGHT = 700;
 
     private IPersistence persistence;
     private TextObject dashboardText;
@@ -49,12 +48,13 @@ public class PerioWorld extends GameEngine {
 
     // Sounds
     private Sound backgroundSound;
-    private Sound walkSound;
+    private Sound coinSound;
+    private Sound gemSound;
+    private Sound pushButtonSound;
+    private Sound switchButtonSound;
+    private Sound liftSound;
     private Sound jumpSound;
-    private Sound collectibleSound;
-    private Sound consumableSound;
-    private Sound npcSound;
-
+    private Sound crouchSound;
 
     public static void main(String[] args) {
         PerioWorld pw = new PerioWorld();
@@ -65,13 +65,13 @@ public class PerioWorld extends GameEngine {
     public void setupGame() {
         // init
         initSound();
-        initDashboard(zoomWidth, 100);
+        initDashboard(ZOOMWIDTH, 100);
         initTileMap();
         initPersistence();
 
         initGameObjects();
 
-        createVieWithViewport();
+        createViewWithViewport();
     }
 
     @Override
@@ -83,12 +83,16 @@ public class PerioWorld extends GameEngine {
      * Initialiseert alle geluidsobjecten
      */
     private void initSound() {
-//        backgroundSound = new Sound(this, MEDIA_PATH.concat("sound.mp3"));
-//        walkSound = new Sound(this, MEDIA_PATH.concat("sound.mp3"));
-//        jumpSound = new Sound(this, MEDIA_PATH.concat("sound.mp3"));
-//        collectibleSound = new Sound(this, MEDIA_PATH.concat("sound.mp3"));
-//        consumableSound = new Sound(this, MEDIA_PATH.concat("sound.mp3"));
-//        npcSound = new Sound(this, MEDIA_PATH.concat("sound.mp3"))
+        backgroundSound = new Sound(this, MEDIA_PATH.concat("backgrounds/bg.mp3"));
+        coinSound = new Sound(this, MEDIA_PATH.concat("collectibles/coinSound.mp3"));
+        gemSound = new Sound(this, MEDIA_PATH.concat("collectibles/gemSound.mp3"));
+        pushButtonSound = new Sound(this, MEDIA_PATH.concat("buttons/pushButtonSound.mp3"));
+        switchButtonSound = new Sound(this, MEDIA_PATH.concat("buttons/pushButtonSound.mp3"));
+        liftSound = new Sound(this, MEDIA_PATH.concat("obstacles/liftSound.mp3"));
+//        jumpSound = new Sound(this, MEDIA_PATH.concat("characters/jumpSound.mp3"));
+//        crouchSound = new Sound(this, MEDIA_PATH.concat("characters/crouchSound.mp3"));
+
+//        backgroundSound.loop(-1);
     }
 
     /**
@@ -114,10 +118,10 @@ public class PerioWorld extends GameEngine {
 
         // Players
         playerOne = new Player(this, 1);
-        addGameObject(playerOne, 50, worldHeight - 140 - playerOne.getHeight());
+        addGameObject(playerOne, columnToXCoordinate(1), rowToYCoordinate(16));
 
         playerTwo = new Player(this, 2);
-        addGameObject(playerTwo, 50 + playerOne.getWidth(), worldHeight - 140 - playerTwo.getHeight());
+        addGameObject(playerTwo, columnToXCoordinate(2), rowToYCoordinate(16));
 
         // Follow Object
         followObject = new FollowObject(this, playerOne, playerTwo);
@@ -129,24 +133,30 @@ public class PerioWorld extends GameEngine {
         collectibles.add(new Coin(this));
         collectibles.add(new Gem(this));
 
-        addGameObject(collectibles.get(0), 3 * tileMap.getTileSize(), worldHeight - 8 * tileMap.getTileSize());
-        addGameObject(collectibles.get(1), 4 * tileMap.getTileSize(), worldHeight - 8 * tileMap.getTileSize());
+        addGameObject(collectibles.get(0), columnToXCoordinate(3), rowToYCoordinate(12));
+        addGameObject(collectibles.get(1), columnToXCoordinate(1), rowToYCoordinate(12));
 
         // Buttons
         buttons = new ArrayList<>();
 
-        buttons.add(new PushButton());
-        buttons.add(new SwitchButton());
+        buttons.add(new PushButton(pushButtonSound));      // 0
+        buttons.add(new PushButton(pushButtonSound));      // 1
+        buttons.add(new SwitchButton(switchButtonSound));    // 2
 
-        addGameObject(buttons.get(0), 300, worldHeight - 2 * tileMap.getTileSize() - buttons.get(0).getHeight());
-        addGameObject(buttons.get(1), 500, worldHeight - 2 * tileMap.getTileSize() - buttons.get(1).getHeight());
+        addGameObject(buttons.get(0), columnToXCoordinate(8), rowToYCoordinate(17));
+        addGameObject(buttons.get(1), columnToXCoordinate(8), rowToYCoordinate(12));
+        addGameObject(buttons.get(2), columnToXCoordinate(4), rowToYCoordinate(17));
 
-        // Dummy Target
+        // Obstacles
         obstacles = new ArrayList<>();
 
-        obstacles.add(new Lift(this,worldHeight - 7 * tileMap.getTileSize()));
+        obstacles.add(new Lift(this, rowToYCoordinate(13), liftSound));
 
-        addGameObject((SpriteObject) obstacles.get(0), 700, worldHeight - 2 * tileMap.getTileSize() - ((SpriteObject) obstacles.get(0)).getHeight());
+        addGameObject((SpriteObject) obstacles.get(0), columnToXCoordinate(10), rowToYCoordinate(17));
+
+        // Koppel buttons aan obstacles
+        buttons.get(0).addTarget(obstacles.get(0));
+        buttons.get(1).addTarget(obstacles.get(0));
     }
 
     /**
@@ -219,16 +229,30 @@ public class PerioWorld extends GameEngine {
      * Creeert de view een met Central Following Viewport
      */
 
-    private void createVieWithViewport() {
-        CenterFollowingViewport viewPort = new CenterFollowingViewport(followObject, zoomWidth, zoomHeight);
-        View view = new View(viewPort, worldWidth, worldHeight);
+    private void createViewWithViewport() {
+        CenterFollowingViewport viewPort = new CenterFollowingViewport(followObject, ZOOMWIDTH, ZOOMHEIGHT);
+        View view = new View(viewPort, WORLDWIDTH, WORLDHEIGHT);
 
         setView(view);
-        size(zoomWidth, zoomHeight);
+        size(ZOOMWIDTH, ZOOMHEIGHT);
         view.setBackground(loadImage(MEDIA_PATH.concat("backgrounds/bg.png")));
     }
 
     /**
-     * Helper functie om
+     * Helper functie: Calculeert X positie (in pixels) in tileMap om object te plaatsen.
+     * @param   column  Index van colom in tileMap waar object geplaatst moet worden.
+     * @return          X Coordinaat in float
      */
+    private float columnToXCoordinate(int column) {
+        return column * tileMap.getTileSize();
+    }
+
+    /**
+     * Helper functie: Calculeert Y positie (in pixels) in tileMap om object te plaatsen.
+     * @param   row     Index van row in tileMap waar object geplaatst moet worden.
+     * @return          Y Coordinaat in float
+     */
+    private float rowToYCoordinate(int row) {
+        return row * tileMap.getTileSize();
+    }
 }
