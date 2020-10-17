@@ -19,19 +19,19 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
         RIGHT,
         DOWN,
         LEFT,
-
     }
 
     private final PerioWorld world;
-    private String name;
-    private int player;
+    private int playerNo;
     private Direction direction;
+    private int collected;
 
-    public Player(PerioWorld world, int player) {
-        super(new Sprite(PerioWorld.MEDIA_PATH.concat("characters/mario.png")), 45);
+
+    public Player(PerioWorld world, int playerNo) {
+        super(new Sprite(playerNo == 1 ? PerioWorld.MEDIA_PATH.concat("characters/marioSprite.png") : PerioWorld.MEDIA_PATH.concat("characters/peachSprite.png")), 45);
         this.world = world;
-        this.name = "Mario";
-        this.player = player;
+        this.playerNo = playerNo;
+        this.collected = 0;
 
         setCurrentFrameIndex(0);
         setFriction(0.10f);
@@ -45,7 +45,7 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
         // Update horizontal direction for animation methods
         if (direction == Direction.UP) {
             jumpAnimation();
-            setDirectionSpeed(0, 20);
+
         } else if (direction == Direction.RIGHT) {
             walkAnimation();
             setDirectionSpeed(90, 5);
@@ -69,24 +69,22 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
             setySpeed(0);
             setY(0);
         }
-        if (getX() >= PerioWorld.worldWidth - this.width) {
+        if (getX() >= PerioWorld.WORLDWIDTH - this.width) {
             setxSpeed(0);
-            setX(PerioWorld.worldWidth - this.width - 1);
+            setX(PerioWorld.WORLDWIDTH - this.width - 1);
         }
-        if (getY() >= PerioWorld.worldHeight - this.height) {
+        if (getY() >= PerioWorld.WORLDHEIGHT - this.height) {
             setySpeed(0);
-            setY(PerioWorld.worldHeight - this.height);
+            setY(PerioWorld.WORLDHEIGHT - this.height);
         }
     }
 
     @Override
     public void keyPressed(int keyCode, char key) {
-        if (this.player == 1) {
+        if (this.playerNo == 1) {
             // Controls Player 1
             if (keyCode == world.UP) {
-                if (Math.floor(getY()) == Math.floor(getPrevY())) {
-                    direction = Direction.UP;
-                }
+                direction = Direction.UP;
             } else if (keyCode == world.RIGHT) {
                 direction = Direction.RIGHT;
             } else if (keyCode == world.DOWN) {
@@ -95,7 +93,7 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
             } else if (keyCode == world.LEFT) {
                 direction = Direction.LEFT;
             }
-        } else if (this.player == 2) {
+        } else if (this.playerNo == 2) {
             // Controls Player 2
             if (keyCode == 87) { // W
                 if (Math.floor(getY()) == Math.floor(getPrevY())) {
@@ -126,6 +124,11 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
         PVector vector;
         for (CollidedTile ct : collidedTiles) {
             if (ct.getTile() instanceof FloorTile) {
+                // Springen alleen mogelijk wanneer speler op een tile is.
+                if (direction == Direction.UP) {
+                    setDirectionSpeed(0, 20);
+                }
+
                 try {
                     vector = world.getTileMap().getTilePixelLocation(ct.getTile());
 
@@ -139,6 +142,11 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
                 }
             }
         }
+    }
+
+    // Collect
+    public void collect() {
+        collected++;
     }
 
     // Animations
@@ -170,4 +178,10 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
     private void jumpAnimation() {
         setCurrentFrameIndex(36);
     }
+
+    // Getters & Setters
+    public int getPlayerNo() {
+        return playerNo;
+    }
 }
+
