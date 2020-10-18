@@ -6,7 +6,9 @@ import nl.han.ica.oopg.collision.ICollidableWithTiles;
 import nl.han.ica.oopg.exceptions.TileNotFoundException;
 import nl.han.ica.oopg.objects.AnimatedSpriteObject;
 import nl.han.ica.oopg.objects.Sprite;
+import nl.han.ica.oopg.sound.Sound;
 import perio.tiles.FloorTile;
+import perio.obstacles.LavaTile;
 import processing.core.PVector;
 
 import java.util.List;
@@ -22,16 +24,23 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
     }
 
     private final PerioWorld world;
-    private int playerNo;
     private Direction direction;
-    private int collected;
+    private int playerNo;
+    private int health;
+    private int points;
+
+    private Sound gameOverSound;
 
 
-    public Player(PerioWorld world, int playerNo) {
+    public Player(PerioWorld world, int playerNo, Sound gameOverSound) {
         super(new Sprite(playerNo == 1 ? PerioWorld.MEDIA_PATH.concat("characters/marioSprite.png") : PerioWorld.MEDIA_PATH.concat("characters/peachSprite.png")), 45);
+
         this.world = world;
         this.playerNo = playerNo;
-        this.collected = 0;
+        this.gameOverSound = gameOverSound;
+
+        this.health = 3;
+        this.points = 0;
 
         setCurrentFrameIndex(0);
         setFriction(0.10f);
@@ -40,12 +49,88 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
 
     @Override
     public void update() {
-        float offset = 10f;
+        handleDirection();
+        handleBoundaries();
+    }
 
-        // Update horizontal direction for animation methods
+    @Override
+    public void keyPressed(int keyCode, char key) {
+        // Controls Player 1
+        if (keyCode == world.UP && playerNo == 1) {
+            direction = Direction.UP;
+        } else if (keyCode == world.RIGHT && playerNo == 1) {
+            direction = Direction.RIGHT;
+        } else if (keyCode == world.DOWN && playerNo == 1) {
+            setFriction(0.02f);
+            direction = Direction.DOWN;
+        } else if (keyCode == world.LEFT && playerNo == 1) {
+            direction = Direction.LEFT;
+        }
+
+        // Controls Player 2
+        if (keyCode == 87 && playerNo == 2) {           // W
+            direction = Direction.UP;
+        }
+        if (keyCode == 68 && playerNo == 2) {           // D
+            direction = Direction.RIGHT;
+        } else if (keyCode == 83 && playerNo == 2) {    // S
+            setFriction(0.02f);
+            direction = Direction.DOWN;
+        } else if (keyCode == 65 && playerNo == 2) {    // A
+            direction = Direction.LEFT;
+        }
+    }
+
+    @Override
+    public void keyReleased(int keyCode, char key) {
+        direction = Direction.IDLE;
+        setFriction(0.10f);
+        setCurrentFrameIndex(0);
+    }
+
+    @Override
+    public void tileCollisionOccurred(List<CollidedTile> collidedTiles) {
+        PVector vector;
+
+        for (CollidedTile ct : collidedTiles) {
+            if (ct.getTile() instanceof FloorTile) {
+                // Springen alleen mogelijk wanneer speler op een tile is.
+                if (direction == Direction.UP) {
+                    setDirectionSpeed(0, 20);
+                }
+
+                try {
+                    vector = world.getTileMap().getTilePixelLocation(ct.getTile());
+
+                    if (ct.getCollisionSide() == CollisionSide.BOTTOM) {
+                        setY(vector.y + world.getTileMap().getTileSize());
+                    } else {
+                        setY(vector.y - getHeight());
+                    }
+                } catch (TileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            } else if (ct.getTile() instanceof LavaTile) {
+                gameOverSound.rewind();
+                gameOverSound.play();
+
+                world.deleteGameObject(this);
+            }
+        }
+    }
+
+    /**
+     * Voert handelingen uit aan de hand van de variabele 'direction'
+     * <p>
+     * Wij hebben het bewegen van de spelers op deze manier geimplementeerd omdat het anders onmogelijk was om twee spelers
+     * tegelijk te besturen. OOPG kan namelijk maar een keyCode tegelijk registreren in de methodes keyPressed() en keyReleased().
+     * <p>
+     * Er kan alleen bewogen worden als de speler nog levens heeft.
+     */
+    private void handleDirection() {
         if (direction == Direction.UP) {
             jumpAnimation();
-
+            // Springen worden gehandeld in tileCollisionOccurred, omdat het poppetje alleen mag springen als het een tile aanraakt.
         } else if (direction == Direction.RIGHT) {
             walkAnimation();
             setDirectionSpeed(90, 5);
@@ -59,8 +144,14 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
         } else if (direction == Direction.IDLE) {
             setCurrentFrameIndex(0);
         }
+    }
 
-//      Boundaries
+    /**
+     * Zorgt ervoor dat de speler zich nooit buiten de wereld kan begeven.
+     * <p>
+     * Maakt gebruik van global final variabelen die gedefinieerd zijn in PerioWorld.java
+     */
+    private void handleBoundaries() {
         if (getX() < 0) {
             setxSpeed(0);
             setX(0);
@@ -79,76 +170,6 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
         }
     }
 
-    @Override
-    public void keyPressed(int keyCode, char key) {
-        if (this.playerNo == 1) {
-            // Controls Player 1
-            if (keyCode == world.UP) {
-                direction = Direction.UP;
-            } else if (keyCode == world.RIGHT) {
-                direction = Direction.RIGHT;
-            } else if (keyCode == world.DOWN) {
-                setFriction(0.02f);
-                direction = Direction.DOWN;
-            } else if (keyCode == world.LEFT) {
-                direction = Direction.LEFT;
-            }
-        } else if (this.playerNo == 2) {
-            // Controls Player 2
-            if (keyCode == 87) { // W
-                if (Math.floor(getY()) == Math.floor(getPrevY())) {
-                    direction = Direction.UP;
-                }
-            }
-            if (keyCode == 68) { // D
-                direction = Direction.RIGHT;
-            } else if (keyCode == 83) { // S
-                setFriction(0.02f);
-                direction = Direction.DOWN;
-            } else if (keyCode == 65) { // A
-                direction = Direction.LEFT;
-            }
-        }
-    }
-
-
-    @Override
-    public void keyReleased(int keyCode, char key) {
-        direction = Direction.IDLE;
-        setFriction(0.10f);
-        setCurrentFrameIndex(0);
-    }
-
-    @Override
-    public void tileCollisionOccurred(List<CollidedTile> collidedTiles) {
-        PVector vector;
-        for (CollidedTile ct : collidedTiles) {
-            if (ct.getTile() instanceof FloorTile) {
-                // Springen alleen mogelijk wanneer speler op een tile is.
-                if (direction == Direction.UP) {
-                    setDirectionSpeed(0, 20);
-                }
-
-                try {
-                    vector = world.getTileMap().getTilePixelLocation(ct.getTile());
-
-                    if (ct.getCollisionSide() == CollisionSide.BOTTOM){
-                        setY(vector.y + world.getTileMap().getTileSize());
-                    } else {
-                        setY(vector.y - getHeight());
-                    }
-                } catch (TileNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    // Collect
-    public void collect() {
-        collected++;
-    }
-
     // Animations
     private void walkAnimation() {
         if (direction == Direction.RIGHT) {
@@ -160,7 +181,7 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
                 setCurrentFrameIndex(37);
             }
         } else if (direction == Direction.LEFT) {
-
+            // TODO: Fix animatie nu hetzelfde als rechts!
             if (getCurrentFrameIndex() < 37 || getCurrentFrameIndex() > 43) {
                 setCurrentFrameIndex(37);
             } else if (getCurrentFrameIndex() < 43) {
@@ -182,6 +203,29 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
     // Getters & Setters
     public int getPlayerNo() {
         return playerNo;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        if (this.health > 0) {
+            this.health = health;
+        } else {
+            gameOverSound.rewind();
+            gameOverSound.play();
+
+            world.deleteGameObject(this);
+        }
     }
 }
 
