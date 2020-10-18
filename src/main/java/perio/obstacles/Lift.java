@@ -14,15 +14,21 @@ import java.util.List;
 public class Lift extends SpriteObject implements ICollidableWithGameObjects, IObstacle {
     private PerioWorld world;
     private Sound liftSound;
+    private float minHeight;
     private float maxHeight;
 
     /**
      * Create a new SpriteObject with a Sprite object.
+     * @param world asdasdasd
+     * @param liftSound     Geluid dat afgespeelt moet worden wanneer lift beweegt.
+     * @param minHeight     Y Coordinaat wanneer lift omlaag is.
+     * @param maxHeight     Y Coordinaat wanneer lift omhoog is.
      */
-    public Lift(PerioWorld world, float maxHeight, Sound liftSound) {
+    public Lift(PerioWorld world, Sound liftSound, float minHeight, float maxHeight) {
         super(new Sprite(PerioWorld.MEDIA_PATH.concat("obstacles/liftSprite.png")));
         this.world = world;
         this.liftSound = liftSound;
+        this.minHeight = minHeight;
         this.maxHeight = maxHeight;
         setGravity(0.5f);
     }
@@ -32,8 +38,8 @@ public class Lift extends SpriteObject implements ICollidableWithGameObjects, IO
         if (getY() < maxHeight) {
             setSpeed(0);
             setY(maxHeight);
-        } else if (getY() > PerioWorld.WORLDHEIGHT - 3 * world.getTileMap().getTileSize()) {
-            setY(PerioWorld.WORLDHEIGHT - 210);
+        } else if (getY() >= minHeight) {
+            setY(minHeight);
         }
     }
 
