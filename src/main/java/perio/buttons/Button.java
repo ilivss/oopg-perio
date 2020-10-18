@@ -44,6 +44,7 @@ public abstract class Button extends AnimatedSpriteObject implements ICollidable
     };
 
     public void executeButtonAction() {
+        // TODO Fix geluid, hij wordt pas afgespeeld wanneer player van de knop afgaat, terwijl hij eigenlijk afgespeeld  moet worden wanneer hij erop staat
         buttonSound.rewind();
         buttonSound.play();
 
