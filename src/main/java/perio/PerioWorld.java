@@ -18,10 +18,12 @@ import perio.NPCs.Ghost;
 import perio.NPCs.NPC;
 import perio.buttons.Button;
 import perio.buttons.PushButton;
+import perio.buttons.SwitchButton;
 import perio.consumables.Coin;
 import perio.consumables.Consumable;
 import perio.consumables.Gem;
 import perio.consumables.Health;
+import perio.obstacles.Flag;
 import perio.obstacles.IObstacle;
 import perio.obstacles.Lava;
 import perio.obstacles.Lift;
@@ -63,6 +65,7 @@ public class PerioWorld extends GameEngine {
     private Sound switchButtonSound;
     private Sound liftSound;
     private Sound lavaSound;
+    private Sound flagSound;
 
     public static void main(String[] args) {
         PerioWorld pw = new PerioWorld();
@@ -102,6 +105,7 @@ public class PerioWorld extends GameEngine {
         switchButtonSound = new Sound(this, MEDIA_PATH.concat("buttons/pushButtonSound.mp3"));
         liftSound = new Sound(this, MEDIA_PATH.concat("obstacles/liftSound.mp3"));
         lavaSound = new Sound(this, MEDIA_PATH.concat("obstacles/lavaSound.mp3"));
+        flagSound = new Sound(this, MEDIA_PATH.concat("obstacles/flagSound.mp3"));
 
         // TODO: Zet achtergrond muziek aan!
 //        backgroundSound.loop(-1);
@@ -166,28 +170,33 @@ public class PerioWorld extends GameEngine {
         // Buttons
         buttons = new ArrayList<>();
 
-        buttons.add(new PushButton(pushButtonSound));   // 0
-        buttons.add(new PushButton(pushButtonSound));   // 1
+        buttons.add(new PushButton(pushButtonSound));       // 0
+        buttons.add(new PushButton(pushButtonSound));       // 1
+        buttons.add(new SwitchButton(switchButtonSound));   // 2
 
         addGameObject(buttons.get(0), columnToXCoordinate(7), rowToYCoordinate(17));
         addGameObject(buttons.get(1), columnToXCoordinate(7), rowToYCoordinate(12));
+        addGameObject(buttons.get(2), columnToXCoordinate(2), rowToYCoordinate(17));
 
         // Obstacles
         obstacles = new ArrayList<>();
 
         obstacles.add(new Lift(this, liftSound, rowToYCoordinate(18), rowToYCoordinate(13)));     // 0
-        obstacles.add(new Lava(lavaSound));
-        obstacles.add(new Lava(lavaSound));
-        obstacles.add(new Lava(lavaSound));
+        obstacles.add(new Lava(lavaSound));                                                             // 1
+        obstacles.add(new Lava(lavaSound));                                                             // 2
+        obstacles.add(new Lava(lavaSound));                                                             // 3
+        obstacles.add(new Flag(this, flagSound));                                                 // 4
 
         addGameObject((GameObject) obstacles.get(0), columnToXCoordinate(10), rowToYCoordinate(18));
-        addGameObject((GameObject) obstacles.get(1), columnToXCoordinate(4), rowToYCoordinate(18));
-        addGameObject((GameObject) obstacles.get(2), columnToXCoordinate(5), rowToYCoordinate(18));
-        addGameObject((GameObject) obstacles.get(3), columnToXCoordinate(6), rowToYCoordinate(18));
+//        addGameObject((GameObject) obstacles.get(1), columnToXCoordinate(4), rowToYCoordinate(18));
+//        addGameObject((GameObject) obstacles.get(2), columnToXCoordinate(5), rowToYCoordinate(18));
+//        addGameObject((GameObject) obstacles.get(3), columnToXCoordinate(6), rowToYCoordinate(18));
+        addGameObject((GameObject) obstacles.get(4), columnToXCoordinate(5), rowToYCoordinate(12));
 
         // Koppel buttons aan obstacles
         buttons.get(0).addTarget(obstacles.get(0));
         buttons.get(1).addTarget(obstacles.get(0));
+        buttons.get(2).addTarget(obstacles.get(4));
 
         // NPCs
         NPCs = new ArrayList<>();
@@ -237,8 +246,8 @@ public class PerioWorld extends GameEngine {
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {2, 2, 2, 2, -1, -1, -1, 2, 2, 2, 2, 2},
                 {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         };
 
         tileMap = new TileMap(tileSize, tileTypes, tilesMap);
