@@ -38,7 +38,6 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
         this.world = world;
         this.playerNo = playerNo;
         this.gameOverSound = gameOverSound;
-
         this.health = 3;
         this.points = 0;
 
@@ -95,6 +94,7 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
         for (CollidedTile ct : collidedTiles) {
             if (ct.getTile() instanceof FloorTile) {
                 // Springen alleen mogelijk wanneer speler op een tile is.
+
                 if (direction == Direction.UP) {
                     setDirectionSpeed(0, 20);
                 }

@@ -17,12 +17,13 @@ public class Ghost extends NPC {
 
     @Override
     protected void handleFight(Player player) {
+        super.handleFight(player);
+
         if (player.getY() + player.getHeight() < getCenterY()) {
             // NPC gaat dood
             super.kill();
             player.setPoints(player.getPoints() + 2);
         } else {
-            // TODO: Player  gaat gelijk dood! er moet maar 1 leven afgaan!
             // Player verliest een leven.
             player.setHealth(player.getHealth() - 1);
         }
