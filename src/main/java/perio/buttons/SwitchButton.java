@@ -21,11 +21,10 @@ public class SwitchButton extends Button {
 
         for (GameObject go : collidedGameObjects) {
             if (go instanceof Player) {
-                if (go.getCenterX() < getCenterX()) {
-
+                if (go.getX() > go.getPrevX()) {
                     super.isOn = true;
-                    executeButtonAction();
-                } else if (go.getCenterX() > getCenterX()) {
+                    super.executeButtonAction();
+                } else {
                     super.isOn = false;
                 }
             }

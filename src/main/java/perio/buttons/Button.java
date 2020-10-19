@@ -18,10 +18,11 @@ public abstract class Button extends AnimatedSpriteObject implements ICollidable
     /**
      * Create a new AnimatedSpriteObject with a Sprite and set the amount of total frames.
      *
-     * @param sprite      The Sprite to be used
+     * @param sprite The Sprite to be used
      */
     public Button(Sprite sprite, Sound buttonSound) {
         super(sprite, 2);
+        this.isOn = false;
         this.buttonSound = buttonSound;
         this.targets = new ArrayList<>();
 
@@ -29,22 +30,21 @@ public abstract class Button extends AnimatedSpriteObject implements ICollidable
     }
 
     @Override
-    public abstract void gameObjectCollisionOccurred(List<GameObject> collidedGameObjects);
-
-    @Override
     public void update() {
-
         if (isOn) {
             setCurrentFrameIndex(1);
-            executeButtonAction();
         } else {
-
             setCurrentFrameIndex(0);
         }
-    };
+    }
+
+    @Override
+    public abstract void gameObjectCollisionOccurred(List<GameObject> collidedGameObjects);
+
 
     public void executeButtonAction() {
         // TODO Fix geluid, hij wordt pas afgespeeld wanneer player van de knop afgaat, terwijl hij eigenlijk afgespeeld  moet worden wanneer hij erop staat
+        // Ik weet  waarom dit is: deze method wordt  constant opgeroepen in update(); waardoor het geluidje constant gerewind wordt. Hoe kunnen we dit anders doen?
         buttonSound.rewind();
         buttonSound.play();
 
@@ -53,15 +53,7 @@ public abstract class Button extends AnimatedSpriteObject implements ICollidable
         }
     }
 
-    public void addTarget (IObstacle target) {
+    public void addTarget(IObstacle target) {
         targets.add(target);
-    }
-
-    public boolean getValues() {
-        return isOn;
-    }
-
-    public void setOn(boolean on) {
-        this.isOn = on;
     }
 }

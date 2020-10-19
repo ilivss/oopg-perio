@@ -17,22 +17,21 @@ public class PushButton extends Button {
     }
 
     @Override
+    public void update() {
+        super.update();
+
+        // Reset button state om pushbutton effect te krijgen.
+        isOn = false;
+    }
+
+    @Override
     public void gameObjectCollisionOccurred(List<GameObject> collidedGameObjects) {
         for (GameObject go : collidedGameObjects) {
-
             if (go instanceof Player) {
                 go.setY(this.y - go.getHeight() + 20);
                 isOn = true;
                 executeButtonAction();
             }
         }
-    }
-
-    @Override
-    public void update() {
-        super.update();
-
-        // Reset button state
-        isOn = false;
     }
 }
