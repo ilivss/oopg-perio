@@ -37,6 +37,7 @@ public class PerioWorld extends GameEngine {
     public static int WORLDHEIGHT = 1400;
     public static int ZOOMWIDTH = 840;
     public static int ZOOMHEIGHT = 700;
+    private int timer = 0;
 
     private IPersistence persistence;
     private TextObject playerOneDashboardText;
@@ -236,7 +237,11 @@ public class PerioWorld extends GameEngine {
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+<<<<<<< HEAD
                 {2, 2, 2, 2, -1, -1, -1, 2, 2, 2, 2, 2},
+=======
+                {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+>>>>>>> 206f6ba7c1fc6544ab0e1f64aa07ce2cd77a52d0
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         };
 

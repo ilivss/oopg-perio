@@ -10,7 +10,7 @@ import perio.Player;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public abstract class NPC extends AnimatedSpriteObject implements ICollidableWithGameObjects {
+public class NPC extends AnimatedSpriteObject implements ICollidableWithGameObjects {
     private PerioWorld world;
     private float leftBoundary;
     private float rightBoundary;
@@ -31,7 +31,11 @@ public abstract class NPC extends AnimatedSpriteObject implements ICollidableWit
         this.alive = true;
     }
 
-    protected abstract void handleFight(Player player);
+    protected void handleFight(Player player){
+        // Player word terug gezet als hij de ghost raakt
+        player.setX( player.getX() + 25);
+        player.setY( player.getY() + 15 );
+    };
 
     @Override
     public void update() {
