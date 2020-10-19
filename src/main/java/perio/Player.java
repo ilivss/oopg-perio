@@ -33,7 +33,7 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
 
 
     public Player(PerioWorld world, int playerNo, Sound gameOverSound) {
-        super(new Sprite(playerNo == 1 ? PerioWorld.MEDIA_PATH.concat("characters/marioSprite.png") : PerioWorld.MEDIA_PATH.concat("characters/peachSprite.png")), 45);
+        super(new Sprite(playerNo == 1 ? PerioWorld.MEDIA_PATH.concat("characters/marioSprite.png") : PerioWorld.MEDIA_PATH.concat("characters/peachSprite.png")), 19);
 
         this.world = world;
         this.playerNo = playerNo;
@@ -173,31 +173,31 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
     // Animations
     private void walkAnimation() {
         if (direction == Direction.RIGHT) {
-            if (getCurrentFrameIndex() < 37 || getCurrentFrameIndex() > 43) {
-                setCurrentFrameIndex(37);
-            } else if (getCurrentFrameIndex() < 43) {
+            if (getCurrentFrameIndex() < 3 || getCurrentFrameIndex() > 10) {
+                setCurrentFrameIndex(3);
+            } else if (getCurrentFrameIndex() < 10) {
                 nextFrame();
             } else {
-                setCurrentFrameIndex(37);
+                setCurrentFrameIndex(3);
             }
         } else if (direction == Direction.LEFT) {
             // TODO: Fix animatie nu hetzelfde als rechts!
-            if (getCurrentFrameIndex() < 37 || getCurrentFrameIndex() > 43) {
-                setCurrentFrameIndex(37);
-            } else if (getCurrentFrameIndex() < 43) {
+            if (getCurrentFrameIndex() < 11 || getCurrentFrameIndex() > 18) {
+                setCurrentFrameIndex(11);
+            } else if (getCurrentFrameIndex() < 18) {
                 nextFrame();
             } else {
-                setCurrentFrameIndex(37);
+                setCurrentFrameIndex(11);
             }
         }
     }
 
     private void crouchAnimation() {
-        setCurrentFrameIndex(31);
+        setCurrentFrameIndex(2);
     }
 
     private void jumpAnimation() {
-        setCurrentFrameIndex(36);
+        setCurrentFrameIndex(1);
     }
 
     // Getters & Setters
