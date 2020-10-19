@@ -192,7 +192,7 @@ public class PerioWorld extends GameEngine {
         // NPCs
         NPCs = new ArrayList<>();
 
-        NPCs.add(new Ghost(columnToXCoordinate(0), columnToXCoordinate(4)));
+        NPCs.add(new Ghost(this, columnToXCoordinate(0), columnToXCoordinate(4)));
 
         addGameObject(NPCs.get(0), columnToXCoordinate(0), rowToYCoordinate(12));
     }
@@ -237,12 +237,8 @@ public class PerioWorld extends GameEngine {
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-<<<<<<< HEAD
                 {2, 2, 2, 2, -1, -1, -1, 2, 2, 2, 2, 2},
-=======
                 {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
->>>>>>> 206f6ba7c1fc6544ab0e1f64aa07ce2cd77a52d0
-                {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         };
 
         tileMap = new TileMap(tileSize, tileTypes, tilesMap);
