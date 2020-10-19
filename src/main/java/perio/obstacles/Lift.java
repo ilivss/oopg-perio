@@ -56,8 +56,10 @@ public class Lift extends SpriteObject implements ICollidableWithGameObjects, IO
     public void gameObjectCollisionOccurred(List<GameObject> collidedGameObjects) {
         for (GameObject go : collidedGameObjects) {
             if (go instanceof Player) {
-                go.setY(this.y - go.getHeight());
-
+                go.setY(getY() - go.getHeight());
+                if (getY() < maxHeight || getY() > minHeight) {
+                    go.setX(getCenterX());
+                }
             }
         }
     }

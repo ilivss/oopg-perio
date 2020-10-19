@@ -8,7 +8,6 @@ import nl.han.ica.oopg.objects.AnimatedSpriteObject;
 import nl.han.ica.oopg.objects.Sprite;
 import nl.han.ica.oopg.sound.Sound;
 import perio.tiles.FloorTile;
-import perio.obstacles.LavaTile;
 import processing.core.PVector;
 
 import java.util.List;
@@ -110,11 +109,6 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
                 } catch (TileNotFoundException e) {
                     e.printStackTrace();
                 }
-            } else if (ct.getTile() instanceof LavaTile) {
-                gameOverSound.rewind();
-                gameOverSound.play();
-
-                world.deleteGameObject(this);
             }
         }
     }
