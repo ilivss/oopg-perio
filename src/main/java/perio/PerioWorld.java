@@ -4,7 +4,6 @@ import nl.han.ica.oopg.dashboard.Dashboard;
 import nl.han.ica.oopg.engine.GameEngine;
 import nl.han.ica.oopg.objects.GameObject;
 import nl.han.ica.oopg.objects.Sprite;
-import nl.han.ica.oopg.objects.SpriteObject;
 import nl.han.ica.oopg.objects.TextObject;
 import nl.han.ica.oopg.persistence.FilePersistence;
 import nl.han.ica.oopg.persistence.IPersistence;
@@ -24,7 +23,7 @@ import perio.consumables.Consumable;
 import perio.consumables.Gem;
 import perio.consumables.Health;
 import perio.obstacles.IObstacle;
-import perio.obstacles.LavaTile;
+import perio.obstacles.Lava;
 import perio.obstacles.Lift;
 import perio.tiles.FloorTile;
 
@@ -62,6 +61,7 @@ public class PerioWorld extends GameEngine {
     private Sound pushButtonSound;
     private Sound switchButtonSound;
     private Sound liftSound;
+    private Sound lavaSound;
 
     public static void main(String[] args) {
         PerioWorld pw = new PerioWorld();
@@ -100,6 +100,7 @@ public class PerioWorld extends GameEngine {
         pushButtonSound = new Sound(this, MEDIA_PATH.concat("buttons/pushButtonSound.mp3"));
         switchButtonSound = new Sound(this, MEDIA_PATH.concat("buttons/pushButtonSound.mp3"));
         liftSound = new Sound(this, MEDIA_PATH.concat("obstacles/liftSound.mp3"));
+        lavaSound = new Sound(this, MEDIA_PATH.concat("obstacles/lavaSound.mp3"));
 
         // TODO: Zet achtergrond muziek aan!
 //        backgroundSound.loop(-1);
@@ -174,8 +175,14 @@ public class PerioWorld extends GameEngine {
         obstacles = new ArrayList<>();
 
         obstacles.add(new Lift(this, liftSound, rowToYCoordinate(18), rowToYCoordinate(13)));     // 0
+        obstacles.add(new Lava(lavaSound));
+        obstacles.add(new Lava(lavaSound));
+        obstacles.add(new Lava(lavaSound));
 
         addGameObject((GameObject) obstacles.get(0), columnToXCoordinate(10), rowToYCoordinate(18));
+        addGameObject((GameObject) obstacles.get(1), columnToXCoordinate(4), rowToYCoordinate(18));
+        addGameObject((GameObject) obstacles.get(2), columnToXCoordinate(5), rowToYCoordinate(18));
+        addGameObject((GameObject) obstacles.get(3), columnToXCoordinate(6), rowToYCoordinate(18));
 
         // Koppel buttons aan obstacles
         buttons.get(0).addTarget(obstacles.get(0));
@@ -184,7 +191,7 @@ public class PerioWorld extends GameEngine {
         // NPCs
         NPCs = new ArrayList<>();
 
-        NPCs.add(new Ghost(this, columnToXCoordinate(0), columnToXCoordinate(4)));
+        NPCs.add(new Ghost(columnToXCoordinate(0), columnToXCoordinate(4)));
 
         addGameObject(NPCs.get(0), columnToXCoordinate(0), rowToYCoordinate(12));
     }
@@ -206,10 +213,9 @@ public class PerioWorld extends GameEngine {
         TileType<FloorTile> castleMidTile = new TileType<>(FloorTile.class, castleMidSprite);
         TileType<FloorTile> castleRightTile = new TileType<>(FloorTile.class, castleRightSprite);
         TileType<FloorTile> castleCenterTile = new TileType<>(FloorTile.class, castleCenterSprite);
-        TileType<LavaTile> lavaTile = new TileType<>(LavaTile.class, lavaSprite);
 
         int tileSize = 70;
-        TileType[] tileTypes = {castleCenterTile, castleLeftTile, castleMidTile, castleRightTile, lavaTile};
+        TileType[] tileTypes = {castleCenterTile, castleLeftTile, castleMidTile, castleRightTile};
         int tilesMap[][] = {
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -230,7 +236,7 @@ public class PerioWorld extends GameEngine {
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {2, 2, 2, 2,4, 4, 4, 2, 2, 2, 2, 2},
+                {2, 2, 2, 2, -1, -1, -1, 2, 2, 2, 2, 2},
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         };
 
