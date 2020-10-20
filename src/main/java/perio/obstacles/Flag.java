@@ -1,9 +1,12 @@
 package perio.obstacles;
 
 import nl.han.ica.oopg.objects.AnimatedSpriteObject;
+import nl.han.ica.oopg.objects.GameObject;
 import nl.han.ica.oopg.objects.Sprite;
 import nl.han.ica.oopg.sound.Sound;
 import perio.PerioWorld;
+
+import java.util.Vector;
 
 public class Flag extends AnimatedSpriteObject implements IObstacle {
     private PerioWorld world;
@@ -30,9 +33,15 @@ public class Flag extends AnimatedSpriteObject implements IObstacle {
 
     @Override
     public void handleTarget() {
-        flagSound.rewind();
-        flagSound.play();
-        up = true;
-        setCurrentFrameIndex(1);
+        Vector<GameObject> tests = world.getGameObjectItems();
+        float averageY = (tests.get(0).getY() + tests.get(1).getY()) / 2;
+
+
+        if (averageY <= getY() + getHeight()) {
+            flagSound.rewind();
+            flagSound.play();
+            up = true;
+            setCurrentFrameIndex(1);
+        }
     }
 }
