@@ -66,6 +66,7 @@ public class PerioWorld extends GameEngine {
     private Sound liftSound;
     private Sound lavaSound;
     private Sound flagSound;
+    private Sound ghostSound;
 
     public static void main(String[] args) {
         PerioWorld pw = new PerioWorld();
@@ -106,6 +107,7 @@ public class PerioWorld extends GameEngine {
         liftSound = new Sound(this, MEDIA_PATH.concat("obstacles/liftSound.mp3"));
         lavaSound = new Sound(this, MEDIA_PATH.concat("obstacles/lavaSound.mp3"));
         flagSound = new Sound(this, MEDIA_PATH.concat("obstacles/flagSound.mp3"));
+        ghostSound = new Sound(this, MEDIA_PATH.concat("NPCs/ghostSound.mp3"));
 
         // TODO: Zet achtergrond muziek aan!
 //        backgroundSound.loop(-1);
@@ -176,7 +178,7 @@ public class PerioWorld extends GameEngine {
 
         addGameObject(buttons.get(0), columnToXCoordinate(7), rowToYCoordinate(17));
         addGameObject(buttons.get(1), columnToXCoordinate(7), rowToYCoordinate(12));
-        addGameObject(buttons.get(2), columnToXCoordinate(2), rowToYCoordinate(17));
+        addGameObject(buttons.get(2), columnToXCoordinate(2), rowToYCoordinate(12));
 
         // Obstacles
         obstacles = new ArrayList<>();
@@ -201,7 +203,7 @@ public class PerioWorld extends GameEngine {
         // NPCs
         NPCs = new ArrayList<>();
 
-        NPCs.add(new Ghost(this, columnToXCoordinate(0), columnToXCoordinate(4)));
+        NPCs.add(new Ghost(this, ghostSound, columnToXCoordinate(0), columnToXCoordinate(4)));
 
         addGameObject(NPCs.get(0), columnToXCoordinate(0), rowToYCoordinate(12));
     }
