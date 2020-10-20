@@ -19,10 +19,11 @@ public class Lift extends SpriteObject implements ICollidableWithGameObjects, IO
 
     /**
      * Create a new SpriteObject with a Sprite object.
-     * @param world asdasdasd
-     * @param liftSound     Geluid dat afgespeelt moet worden wanneer lift beweegt.
-     * @param minHeight     Y Coordinaat wanneer lift omlaag is.
-     * @param maxHeight     Y Coordinaat wanneer lift omhoog is.
+     *
+     * @param world     asdasdasd
+     * @param liftSound Geluid dat afgespeelt moet worden wanneer lift beweegt.
+     * @param minHeight Y Coordinaat wanneer lift omlaag is.
+     * @param maxHeight Y Coordinaat wanneer lift omhoog is.
      */
     public Lift(PerioWorld world, Sound liftSound, float minHeight, float maxHeight) {
         super(new Sprite(PerioWorld.MEDIA_PATH.concat("obstacles/liftSprite.png")));
@@ -56,7 +57,9 @@ public class Lift extends SpriteObject implements ICollidableWithGameObjects, IO
     public void gameObjectCollisionOccurred(List<GameObject> collidedGameObjects) {
         for (GameObject go : collidedGameObjects) {
             if (go instanceof Player) {
-                go.setY(getY() - go.getHeight());
+                if (go.getY() + go.getHeight() < getCenterY()) {
+                    go.setY(getY() - go.getHeight());
+                }
             }
         }
     }
