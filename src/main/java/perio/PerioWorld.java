@@ -4,6 +4,7 @@ import nl.han.ica.oopg.dashboard.Dashboard;
 import nl.han.ica.oopg.engine.GameEngine;
 import nl.han.ica.oopg.objects.GameObject;
 import nl.han.ica.oopg.objects.Sprite;
+import nl.han.ica.oopg.objects.SpriteObject;
 import nl.han.ica.oopg.objects.TextObject;
 import nl.han.ica.oopg.persistence.FilePersistence;
 import nl.han.ica.oopg.persistence.IPersistence;
@@ -30,6 +31,7 @@ import perio.obstacles.Lift;
 import perio.tiles.FloorTile;
 
 import java.util.ArrayList;
+import java.util.Timer;
 
 public class PerioWorld extends GameEngine {
 
@@ -39,11 +41,13 @@ public class PerioWorld extends GameEngine {
     public static int WORLDHEIGHT = 1400;
     public static int ZOOMWIDTH = 840;
     public static int ZOOMHEIGHT = 700;
-    private int timer = 0;
+    private int timer;
+    private int timerout = 1;
 
     private IPersistence persistence;
     private TextObject playerOneDashboardText;
     private TextObject playerTwoDashboardText;
+    private TextObject endGameDashboardText;
 
     // Game Objects
     private Player playerOne;
@@ -54,6 +58,7 @@ public class PerioWorld extends GameEngine {
     private ArrayList<Button> buttons;
     private ArrayList<IObstacle> obstacles;
     private ArrayList<NPC> NPCs;
+
 
     // Sounds
     private Sound backgroundSound;
@@ -71,6 +76,14 @@ public class PerioWorld extends GameEngine {
     public static void main(String[] args) {
         PerioWorld pw = new PerioWorld();
         pw.runSketch();
+
+    }
+
+    private void timer() {
+        int endtime = 120;
+        timer += 1;
+        timerout = endtime - (timer / 60);
+        System.out.println(timerout);
     }
 
     @Override
@@ -90,6 +103,7 @@ public class PerioWorld extends GameEngine {
     public void update() {
         updateDashboard();
 
+        timer();
         // TODO: Stop game wanneer 1 vd 2 spelers dood gaat!
     }
 
@@ -117,8 +131,11 @@ public class PerioWorld extends GameEngine {
      * Initialiseert dashboard
      */
     private void initDashboard() {
-        Dashboard dashboardPlayerOne = new Dashboard(0, 0, (float) ZOOMWIDTH / 2, 100);
-        Dashboard dashboardPlayerTwo = new Dashboard(0, 0, (float) ZOOMWIDTH / 2, 100);
+
+        Dashboard dashboardPlayerOne = new Dashboard(0, 0, (float) ZOOMWIDTH / 2, 120);
+        Dashboard dashboardPlayerTwo = new Dashboard(0, 0, (float) ZOOMWIDTH / 2, 120);
+
+
 
         playerOneDashboardText = new TextObject("Player One", 20);
         playerOneDashboardText.setForeColor(255, 255, 255, 255);
@@ -137,9 +154,24 @@ public class PerioWorld extends GameEngine {
      * Updates dashboard met huidige spelers informatie
      */
     private void updateDashboard() {
-        playerOneDashboardText.setText("Player One\n" + "Levens: " + playerOne.getHealth() + "\n" + "Punten: " + playerOne.getPoints());
+        playerOneDashboardText.setText("Player One\n" + "Levens: " + playerOne.getHealth() + "\n" + "Punten: " + playerOne.getPoints() + "\n" + "Timer: " + timerout);
         playerTwoDashboardText.setText("Player Two\n" + "Levens: " + playerTwo.getHealth() + "\n" + "Punten: " + playerTwo.getPoints());
 
+        // laat eindscherm zien wanneer spelers af zijn
+        if (playerOne.getHealth() == 0 && playerTwo.getHealth() == 0 || timerout <= 0) {
+
+            Dashboard dashboardStartGame = new Dashboard(0, 0, (float) ZOOMWIDTH, ZOOMHEIGHT);
+            Dashboard dashboardEndGame = new Dashboard(0, 0, (float) ZOOMWIDTH, ZOOMHEIGHT);
+
+            endGameDashboardText = new TextObject("Game over", 20);
+            endGameDashboardText.setText("Game over\n" + "Player one Punten: "+ playerOne.getPoints() + "\n" + "Player two Punten: " + playerTwo.getPoints());
+            endGameDashboardText.setForeColor(255, 255, 255, 255);
+
+            dashboardEndGame.addGameObject(endGameDashboardText, 300, 250);
+            dashboardEndGame.setBackground(174, 126,126);
+
+            addDashboard(dashboardEndGame, 0, 0);
+        }
     }
 
     /**

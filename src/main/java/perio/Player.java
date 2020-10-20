@@ -37,7 +37,7 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
         this.world = world;
         this.playerNo = playerNo;
         this.gameOverSound = gameOverSound;
-        this.health = 3;
+        this.health = 1;
         this.points = 0;
 
         setCurrentFrameIndex(0);
