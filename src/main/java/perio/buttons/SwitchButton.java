@@ -17,13 +17,23 @@ public class SwitchButton extends Button {
     }
 
     @Override
+    public void update() {
+        if (super.isOn) {
+            setCurrentFrameIndex(1);
+            super.executeButtonAction();
+
+        } else {
+            setCurrentFrameIndex(0);
+        }
+    }
+
+    @Override
     public void gameObjectCollisionOccurred(List<GameObject> collidedGameObjects) {
 
         for (GameObject go : collidedGameObjects) {
             if (go instanceof Player) {
                 if (go.getX() > go.getPrevX()) {
                     super.isOn = true;
-                    super.executeButtonAction();
                 } else {
                     super.isOn = false;
                 }

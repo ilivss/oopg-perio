@@ -14,6 +14,7 @@ import nl.han.ica.oopg.view.CenterFollowingViewport;
 import nl.han.ica.oopg.view.View;
 
 // Eigen classes
+import perio.NPCs.Frog;
 import perio.NPCs.Ghost;
 import perio.NPCs.NPC;
 import perio.buttons.Button;
@@ -27,7 +28,9 @@ import perio.obstacles.Flag;
 import perio.obstacles.IObstacle;
 import perio.obstacles.Lava;
 import perio.obstacles.Lift;
+import perio.tiles.DecorationTile;
 import perio.tiles.FloorTile;
+import perio.tiles.LadderTile;
 
 import java.util.ArrayList;
 
@@ -36,7 +39,7 @@ public class PerioWorld extends GameEngine {
     // Game vars
     public static String MEDIA_PATH = "src/main/java/perio/media/";
     public static int WORLDWIDTH = 840;
-    public static int WORLDHEIGHT = 1400;
+    public static int WORLDHEIGHT = 2800;
     public static int ZOOMWIDTH = 840;
     public static int ZOOMHEIGHT = 700;
     private int timer = 0;
@@ -149,63 +152,61 @@ public class PerioWorld extends GameEngine {
 
         // Players
         playerOne = new Player(this, 1, gameOverSound);
-        addGameObject(playerOne, columnToXCoordinate(1), rowToYCoordinate(16));
+        addGameObject(playerOne, columnToXCoordinate(3), rowToYCoordinate(10));
 
         playerTwo = new Player(this, 2, gameOverSound);
-        addGameObject(playerTwo, columnToXCoordinate(2), rowToYCoordinate(16));
+        addGameObject(playerTwo, columnToXCoordinate(2), rowToYCoordinate(36));
 
         // Follow Object
-        followObject = new FollowObject(this, playerOne, playerTwo);
+        followObject = new FollowObject(this, playerOne, playerOne);
         addGameObject(followObject);
 
         // Consumables
         consumables = new ArrayList<>();
 
-        consumables.add(new Coin(this, coinSound));         // 0
-        consumables.add(new Gem(this, gemSound));           // 1
-        consumables.add(new Health(this, healthSound));     // 2
-
-        addGameObject(consumables.get(0), columnToXCoordinate(3), rowToYCoordinate(12));
-        addGameObject(consumables.get(1), columnToXCoordinate(4), rowToYCoordinate(12));
-        addGameObject(consumables.get(2), columnToXCoordinate(5), rowToYCoordinate(12));
-
         // Buttons
         buttons = new ArrayList<>();
+        buttons.add(new PushButton(pushButtonSound));       // 0 - Lift button
+        buttons.add(new PushButton(pushButtonSound));       // 1 - Lift button
+        buttons.add(new SwitchButton(switchButtonSound));   // 2 - Lift button
+        buttons.add(new SwitchButton(switchButtonSound));   // 3 - Lift button
 
-        buttons.add(new PushButton(pushButtonSound));       // 0
-        buttons.add(new PushButton(pushButtonSound));       // 1
-        buttons.add(new SwitchButton(switchButtonSound));   // 2
-
-        addGameObject(buttons.get(0), columnToXCoordinate(7), rowToYCoordinate(17));
-        addGameObject(buttons.get(1), columnToXCoordinate(7), rowToYCoordinate(12));
-        addGameObject(buttons.get(2), columnToXCoordinate(2), rowToYCoordinate(12));
+        addGameObject(buttons.get(0), columnToXCoordinate(8), rowToYCoordinate(28));
+        addGameObject(buttons.get(1), columnToXCoordinate(8), rowToYCoordinate(23));
+        addGameObject(buttons.get(2), columnToXCoordinate(9), rowToYCoordinate(16));
+        addGameObject(buttons.get(3), columnToXCoordinate(4), rowToYCoordinate(11));
 
         // Obstacles
         obstacles = new ArrayList<>();
+        obstacles.add(new Lava(lavaSound));                                                           // 0
+        obstacles.add(new Lava(lavaSound));                                                           // 1
+        obstacles.add(new Lava(lavaSound));                                                           // 2
+        obstacles.add(new Lift(this, liftSound, rowToYCoordinate(28), rowToYCoordinate(24)));    // 3
+        obstacles.add(new Lift(this, liftSound, rowToYCoordinate(16), rowToYCoordinate(12)));    // 4
 
-        obstacles.add(new Lift(this, liftSound, rowToYCoordinate(18), rowToYCoordinate(13)));     // 0
-        obstacles.add(new Lava(lavaSound));                                                             // 1
-        obstacles.add(new Lava(lavaSound));                                                             // 2
-        obstacles.add(new Lava(lavaSound));                                                             // 3
-        obstacles.add(new Flag(this, flagSound));                                                 // 4
-
-        addGameObject((GameObject) obstacles.get(0), columnToXCoordinate(10), rowToYCoordinate(18));
-//        addGameObject((GameObject) obstacles.get(1), columnToXCoordinate(4), rowToYCoordinate(18));
-//        addGameObject((GameObject) obstacles.get(2), columnToXCoordinate(5), rowToYCoordinate(18));
-//        addGameObject((GameObject) obstacles.get(3), columnToXCoordinate(6), rowToYCoordinate(18));
-        addGameObject((GameObject) obstacles.get(4), columnToXCoordinate(5), rowToYCoordinate(12));
+        addGameObject((GameObject) obstacles.get(0), columnToXCoordinate(5), rowToYCoordinate(38));
+        addGameObject((GameObject) obstacles.get(1), columnToXCoordinate(6), rowToYCoordinate(38));
+        addGameObject((GameObject) obstacles.get(2), columnToXCoordinate(7), rowToYCoordinate(38));
+        addGameObject((GameObject) obstacles.get(3), columnToXCoordinate(10), rowToYCoordinate(28));
+        addGameObject((GameObject) obstacles.get(4), columnToXCoordinate(0), rowToYCoordinate(16));
 
         // Koppel buttons aan obstacles
-        buttons.get(0).addTarget(obstacles.get(0));
-        buttons.get(1).addTarget(obstacles.get(0));
+        buttons.get(0).addTarget(obstacles.get(3));
+        buttons.get(1).addTarget(obstacles.get(3));
         buttons.get(2).addTarget(obstacles.get(4));
+        buttons.get(3).addTarget(obstacles.get(4));
 
         // NPCs
         NPCs = new ArrayList<>();
+        NPCs.add(new Ghost(this, ghostSound, columnToXCoordinate(5), columnToXCoordinate(9)));     // 0
+        NPCs.add(new Ghost(this, ghostSound, columnToXCoordinate(4), columnToXCoordinate(7)));     // 1
+        NPCs.add(new Ghost(this, ghostSound, columnToXCoordinate(0), columnToXCoordinate(6)));     // 2
+        NPCs.add(new Frog(this,ghostSound, columnToXCoordinate(5), columnToXCoordinate(11)));      // 3
 
-        NPCs.add(new Ghost(this, ghostSound, columnToXCoordinate(0), columnToXCoordinate(4)));
-
-        addGameObject(NPCs.get(0), columnToXCoordinate(0), rowToYCoordinate(12));
+        addGameObject(NPCs.get(0), columnToXCoordinate(9), rowToYCoordinate(32));
+        addGameObject(NPCs.get(1), columnToXCoordinate(4), rowToYCoordinate(28));
+        addGameObject(NPCs.get(2), columnToXCoordinate(0), rowToYCoordinate(23));
+        addGameObject(NPCs.get(3), columnToXCoordinate(11), rowToYCoordinate(11));
     }
 
     /**
@@ -217,17 +218,61 @@ public class PerioWorld extends GameEngine {
         Sprite castleMidSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/castleMid.png"));
         Sprite castleRightSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/castleRight.png"));
         Sprite castleCenterSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/castleCenter.png"));
+        Sprite doorBottomSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/doorLock.png"));
+        Sprite doorTopSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/doorTop.png"));
+        Sprite torchSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/tochLit.png"));
+        Sprite ladderBottomSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/ladder_mid.png"));
+        Sprite ladderTopSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/ladder_top.png"));
+        Sprite windowBottomSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/windowHighLeadlightBottom.png"));
+        Sprite windowMidSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/windowHighLeadlightMid.png"));
+        Sprite windowTopSprite = new Sprite(MEDIA_PATH.concat("tiles/castle/windowHighLeadlightTop.png"));
 
-        Sprite lavaSprite = new Sprite(MEDIA_PATH.concat("obstacles/lavaSprite.png"));
+        Sprite grassLeftSprite = new Sprite(MEDIA_PATH.concat("tiles/outside/grassLeft.png"));
+        Sprite grassMidSprite = new Sprite(MEDIA_PATH.concat("tiles/outside/grassMid.png"));
+        Sprite grassRightSprite = new Sprite(MEDIA_PATH.concat("tiles/outside/grassRight.png"));
+        Sprite grassCenterSprite = new Sprite(MEDIA_PATH.concat("tiles/outside/grassCenter.png"));
 
-        // Create tile types with the right Tile class and sprite
+//        Sprite  = new Sprite(MEDIA_PATH.concat(""));
+
         TileType<FloorTile> castleLeftTile = new TileType<>(FloorTile.class, castleLeftSprite);
         TileType<FloorTile> castleMidTile = new TileType<>(FloorTile.class, castleMidSprite);
         TileType<FloorTile> castleRightTile = new TileType<>(FloorTile.class, castleRightSprite);
         TileType<FloorTile> castleCenterTile = new TileType<>(FloorTile.class, castleCenterSprite);
+        TileType<DecorationTile> doorBottomTile = new TileType<>(DecorationTile.class, doorBottomSprite);
+        TileType<DecorationTile> doorTopTile = new TileType<>(DecorationTile.class, doorTopSprite);
+        TileType<DecorationTile> torchTile = new TileType<>(DecorationTile.class, torchSprite);
+        TileType<LadderTile> ladderBottomTile = new TileType<>(LadderTile.class, ladderBottomSprite);
+        TileType<LadderTile> ladderTopTile = new TileType<>(LadderTile.class, ladderTopSprite);
+        TileType<DecorationTile> windowBottomTile = new TileType<>(DecorationTile.class, windowBottomSprite);
+        TileType<DecorationTile> windowMidTile = new TileType<>(DecorationTile.class, windowMidSprite);
+        TileType<DecorationTile> windowTopTile = new TileType<>(DecorationTile.class, windowTopSprite);
+
+        TileType<FloorTile> grassLeftTile = new TileType<>(FloorTile.class, grassLeftSprite);
+        TileType<FloorTile> grassMidTile = new TileType<>(FloorTile.class, grassMidSprite);
+        TileType<FloorTile> grassRightTile = new TileType<>(FloorTile.class, grassRightSprite);
+        TileType<FloorTile> grassCenterTile = new TileType<>(FloorTile.class, grassCenterSprite);
+
 
         int tileSize = 70;
-        TileType[] tileTypes = {castleCenterTile, castleLeftTile, castleMidTile, castleRightTile};
+        TileType[] tileTypes = {
+                castleCenterTile,   // 0
+                castleLeftTile,     // 1
+                castleMidTile,      // 2
+                castleRightTile,    // 3
+                doorBottomTile,     // 4
+                doorTopTile,        // 5
+                torchTile,          // 6
+                ladderBottomTile,   // 7
+                ladderTopTile,      // 8
+                windowBottomTile,   // 9
+                windowMidTile,      // 10
+                windowTopTile,      // 11
+                grassCenterTile,   // 12
+                grassLeftTile,     // 13
+                grassMidTile,      // 14
+                grassRightTile,    // 15
+
+        };
         int tilesMap[][] = {
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
@@ -242,13 +287,35 @@ public class PerioWorld extends GameEngine {
 
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, 8, -1, -1, -1, -1, -1, -1},
+                {14, 14, 14, 15, -1, 7, -1, 13, 14, 14, 14, 14},
+                {-1, -1, -1, -1, 6, 7, 6, -1, -1, -1, -1, -1},
+                {-1, 11, -1, -1, -1, 7, -1, -1, -1, -1, 11, -1},
+
+                {6, 10, 6, -1, 6, 7, 6, -1, -1, 6, 10, 6},
+                {-1, 9, -1, -1, -1, 7, -1, -1, -1, -1, 9, -1},
+                {-1, -1, -1, -1, 6, 7, 6, -1, -1, -1, -1, -1},
+                {-1, -1, -1, -1, -1, 7, -1, -1, -1, -1, -1, -1},
                 {2, 2, 2, 2, 2, 2, 2, 2, 2, 3, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2},
+                {-1, -1, -1, 1, 2, 2, 2, 2, 2, 2, 2, 2},
+
+                {-1, -1, 1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, -1, -1, 6, -1, 6, -1, 6, -1, 6, -1, -1},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 8},
+                {2, 2, 2, 2, 2, 2, 2, 2, 2, 3, -1, 7},
+                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 7},
+                {5, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 7},
+                {4, -1, 6, -1, 6, -1, 6, -1, 6, -1, -1, 7},
+                {4, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 7},
+                {2, 2, 2, 2, 3, -1, -1, -1, 1, 2, 2, 2},
                 {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
         };
 
