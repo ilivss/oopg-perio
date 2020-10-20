@@ -8,6 +8,7 @@ import nl.han.ica.oopg.objects.AnimatedSpriteObject;
 import nl.han.ica.oopg.objects.Sprite;
 import nl.han.ica.oopg.sound.Sound;
 import perio.tiles.FloorTile;
+import perio.tiles.LadderTile;
 import processing.core.PVector;
 
 import java.util.List;
@@ -63,6 +64,8 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
             direction = Direction.DOWN;
         } else if (keyCode == world.LEFT && playerNo == 1) {
             direction = Direction.LEFT;
+        } else if(key == ' ' && playerNo == 1){
+            System.out.println("row: " + getY() / 70);
         }
 
         // Controls Player 2
@@ -94,7 +97,7 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
             if (ct.getTile() instanceof FloorTile) {
                 // Springen alleen mogelijk wanneer speler op een tile is.
 
-                if (direction == Direction.UP) {
+                if (direction == Direction.UP && ct.getCollisionSide() == CollisionSide.TOP) {
                     setDirectionSpeed(0, 20);
                 }
 
@@ -108,6 +111,10 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
                     }
                 } catch (TileNotFoundException e) {
                     e.printStackTrace();
+                }
+            } else if(ct.getTile() instanceof LadderTile) {
+                if (direction == Direction.UP) {
+                    setDirectionSpeed(0, 3);
                 }
             }
         }
