@@ -24,7 +24,7 @@ public class NPC extends AnimatedSpriteObject implements ICollidableWithGameObje
      *
      * @param sprite The Sprite to be used
      */
-    public NPC(Sprite sprite,PerioWorld world, Sound NPCSound, float leftBoundary, float rightBoundary, float speed) {
+    public NPC(Sprite sprite, PerioWorld world, Sound NPCSound, float leftBoundary, float rightBoundary, float speed) {
         super(sprite, 3);
         this.world = world;
         this.NPCSound = NPCSound;
@@ -34,15 +34,20 @@ public class NPC extends AnimatedSpriteObject implements ICollidableWithGameObje
         this.alive = true;
     }
 
-    protected void handleFight(Player player){
+    protected void handleFight(Player player) {
         // Player word terug gezet als hij de ghost raakt
-        player.setX( player.getX() + 25);
-        player.setY( player.getY() + 15 );
-    };
+        player.setY(player.getY() + 15);
+
+        if (getX() > getPrevX()) {
+            player.setX(player.getX() + 50);
+        } else {
+            player.setX(player.getX() - 50);
+        }
+    }
 
     @Override
     public void update() {
-        if (super.x <= leftBoundary ) {
+        if (super.x <= leftBoundary) {
             setCurrentFrameIndex(1);
             setDirectionSpeed(90, speed);
 
@@ -57,7 +62,7 @@ public class NPC extends AnimatedSpriteObject implements ICollidableWithGameObje
         for (GameObject go : collidedGameObjects) {
             if (alive) {
                 if (go instanceof Player) {
-                  handleFight((Player) go);
+                    handleFight((Player) go);
                 }
             }
         }
