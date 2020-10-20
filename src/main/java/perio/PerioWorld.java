@@ -86,7 +86,7 @@ public class PerioWorld extends GameEngine {
         int endtime = 120;
         timer += 1;
         timerout = endtime - (timer / 60);
-        System.out.println(timerout);
+//        System.out.println(timerout);
     }
 
     @Override
@@ -184,13 +184,13 @@ public class PerioWorld extends GameEngine {
 
         // Players
         playerOne = new Player(this, 1, gameOverSound);
-        addGameObject(playerOne, columnToXCoordinate(3), rowToYCoordinate(10));
+        addGameObject(playerOne, columnToXCoordinate(3), rowToYCoordinate(36));
 
         playerTwo = new Player(this, 2, gameOverSound);
         addGameObject(playerTwo, columnToXCoordinate(2), rowToYCoordinate(36));
 
         // Follow Object
-        followObject = new FollowObject(this, playerOne, playerOne);
+        followObject = new FollowObject(this, playerOne, playerTwo);
         addGameObject(followObject);
 
         // Consumables
@@ -200,33 +200,38 @@ public class PerioWorld extends GameEngine {
         buttons = new ArrayList<>();
         buttons.add(new PushButton(pushButtonSound));       // 0 - Lift button
         buttons.add(new PushButton(pushButtonSound));       // 1 - Lift button
-        buttons.add(new SwitchButton(switchButtonSound));   // 2 - Lift button
-        buttons.add(new SwitchButton(switchButtonSound));   // 3 - Lift button
+        buttons.add(new SwitchButton(switchButtonSound));   // 2 - Lift switch
+        buttons.add(new SwitchButton(switchButtonSound));   // 3 - Lift switch
+        buttons.add(new SwitchButton(switchButtonSound));   // 4 - Flag switch
 
         addGameObject(buttons.get(0), columnToXCoordinate(8), rowToYCoordinate(28));
         addGameObject(buttons.get(1), columnToXCoordinate(8), rowToYCoordinate(23));
         addGameObject(buttons.get(2), columnToXCoordinate(9), rowToYCoordinate(16));
-        addGameObject(buttons.get(3), columnToXCoordinate(4), rowToYCoordinate(11));
+        addGameObject(buttons.get(3), columnToXCoordinate(3), rowToYCoordinate(11));
+        addGameObject(buttons.get(4), columnToXCoordinate(9), rowToYCoordinate(11));
 
         // Obstacles
         obstacles = new ArrayList<>();
-        obstacles.add(new Lava(lavaSound));                                                           // 0
-        obstacles.add(new Lava(lavaSound));                                                           // 1
-        obstacles.add(new Lava(lavaSound));                                                           // 2
-        obstacles.add(new Lift(this, liftSound, rowToYCoordinate(28), rowToYCoordinate(24)));    // 3
-        obstacles.add(new Lift(this, liftSound, rowToYCoordinate(16), rowToYCoordinate(12)));    // 4
+        obstacles.add(new Lava(lavaSound));                                                             // 0
+        obstacles.add(new Lava(lavaSound));                                                             // 1
+        obstacles.add(new Lava(lavaSound));                                                             // 2
+        obstacles.add(new Lift(this, liftSound, rowToYCoordinate(28), rowToYCoordinate(24)));     // 3
+        obstacles.add(new Lift(this, liftSound, rowToYCoordinate(16), rowToYCoordinate(12)));     // 4
+        obstacles.add(new Flag(this, flagSound));                                                 // 5
 
         addGameObject((GameObject) obstacles.get(0), columnToXCoordinate(5), rowToYCoordinate(38));
         addGameObject((GameObject) obstacles.get(1), columnToXCoordinate(6), rowToYCoordinate(38));
         addGameObject((GameObject) obstacles.get(2), columnToXCoordinate(7), rowToYCoordinate(38));
         addGameObject((GameObject) obstacles.get(3), columnToXCoordinate(10), rowToYCoordinate(28));
         addGameObject((GameObject) obstacles.get(4), columnToXCoordinate(0), rowToYCoordinate(16));
+        addGameObject((GameObject) obstacles.get(5), columnToXCoordinate(6), rowToYCoordinate(11));
 
         // Koppel buttons aan obstacles
         buttons.get(0).addTarget(obstacles.get(3));
         buttons.get(1).addTarget(obstacles.get(3));
         buttons.get(2).addTarget(obstacles.get(4));
         buttons.get(3).addTarget(obstacles.get(4));
+        buttons.get(4).addTarget(obstacles.get(5));
 
         // NPCs
         NPCs = new ArrayList<>();
@@ -263,8 +268,6 @@ public class PerioWorld extends GameEngine {
         Sprite grassMidSprite = new Sprite(MEDIA_PATH.concat("tiles/outside/grassMid.png"));
         Sprite grassRightSprite = new Sprite(MEDIA_PATH.concat("tiles/outside/grassRight.png"));
         Sprite grassCenterSprite = new Sprite(MEDIA_PATH.concat("tiles/outside/grassCenter.png"));
-
-//        Sprite  = new Sprite(MEDIA_PATH.concat(""));
 
         TileType<FloorTile> castleLeftTile = new TileType<>(FloorTile.class, castleLeftSprite);
         TileType<FloorTile> castleMidTile = new TileType<>(FloorTile.class, castleMidSprite);
@@ -334,8 +337,8 @@ public class PerioWorld extends GameEngine {
                 {-1, -1, -1, -1, -1, 7, -1, -1, -1, -1, -1, -1},
                 {2, 2, 2, 2, 2, 2, 2, 2, 2, 3, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
-                {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
+                {-1, 11, -1, -1, -1, 11, -1, -1, -1, -1, -1, -1},
+                {-1, 9, -1, 6, -1, 9, -1, 6, -1, -1, -1, -1},
                 {-1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1},
                 {-1, -1, -1, 1, 2, 2, 2, 2, 2, 2, 2, 2},
 
