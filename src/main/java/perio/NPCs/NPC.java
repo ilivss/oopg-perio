@@ -4,6 +4,7 @@ import nl.han.ica.oopg.collision.ICollidableWithGameObjects;
 import nl.han.ica.oopg.objects.AnimatedSpriteObject;
 import nl.han.ica.oopg.objects.GameObject;
 import nl.han.ica.oopg.objects.Sprite;
+import nl.han.ica.oopg.sound.Sound;
 import perio.PerioWorld;
 import perio.Player;
 
@@ -12,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class NPC extends AnimatedSpriteObject implements ICollidableWithGameObjects {
     private PerioWorld world;
+    private Sound NPCSound;
     private float leftBoundary;
     private float rightBoundary;
     private float speed;
@@ -22,9 +24,10 @@ public class NPC extends AnimatedSpriteObject implements ICollidableWithGameObje
      *
      * @param sprite The Sprite to be used
      */
-    public NPC(PerioWorld world, Sprite sprite, float leftBoundary, float rightBoundary, float speed) {
+    public NPC(Sprite sprite,PerioWorld world, Sound NPCSound, float leftBoundary, float rightBoundary, float speed) {
         super(sprite, 3);
         this.world = world;
+        this.NPCSound = NPCSound;
         this.leftBoundary = leftBoundary;
         this.rightBoundary = rightBoundary;
         this.speed = speed;
@@ -61,6 +64,9 @@ public class NPC extends AnimatedSpriteObject implements ICollidableWithGameObje
     }
 
     protected void kill() {
+        NPCSound.rewind();
+        NPCSound.play();
+
         alive = false;
         setCurrentFrameIndex(2);
         setSpeed(0);

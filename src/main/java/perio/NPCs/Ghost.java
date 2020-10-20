@@ -1,6 +1,7 @@
 package perio.NPCs;
 
 import nl.han.ica.oopg.objects.Sprite;
+import nl.han.ica.oopg.sound.Sound;
 import perio.PerioWorld;
 import perio.Player;
 
@@ -11,8 +12,8 @@ public class Ghost extends NPC {
      * @param leftBoundary
      * @param rightBoundary
      */
-    public Ghost(PerioWorld world, float leftBoundary, float rightBoundary) {
-        super(world, new Sprite(PerioWorld.MEDIA_PATH.concat("NPCs/ghostSprite.png")), leftBoundary, rightBoundary, 2);
+    public Ghost(PerioWorld world, Sound ghostSound, float leftBoundary, float rightBoundary) {
+        super(new Sprite(PerioWorld.MEDIA_PATH.concat("NPCs/ghostSprite.png")), world, ghostSound, leftBoundary, rightBoundary, 2);
     }
 
     @Override
