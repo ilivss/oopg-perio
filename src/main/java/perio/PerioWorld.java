@@ -152,7 +152,7 @@ public class PerioWorld extends GameEngine {
     public void update() {
         updateDashboard();
 
-        if (gamestate == GameState.RUNNING) {
+        if (gameState == GameState.RUNNING) {
             deleteDashboard(dashboardEndGame);
             timer();
         }
@@ -233,14 +233,14 @@ public class PerioWorld extends GameEngine {
         playerOneDashboardText.setText("Player One\n" + "Levens: " + playerOne.getHealth() + "\n" + "Punten: " + playerOne.getPoints() + "\n" + "Timer: " + timerout);
         playerTwoDashboardText.setText("Player Two\n" + "Levens: " + playerTwo.getHealth() + "\n" + "Punten: " + playerTwo.getPoints());
 
-        if (gamestate == GameState.RUNNING) {
+        if (gameState == GameState.RUNNING) {
             deleteDashboard(dashboardStartGame);
             deleteDashboard(dashboardEndGame);
         }
 
         // laat eindscherm zien wanneer spelers af zijn
         if (playerOne.getHealth() == 0 || playerTwo.getHealth() == 0 || timerout <= 0) {
-            gamestate = GameState.END;
+            gameState = GameState.END;
             backgroundSound.pause();
             endGameDashboardText.setText("Game over\n" + "Player one Punten: "+ playerOne.getPoints() + "\n" + "Player two Punten: " + playerTwo.getPoints() + "\n" + "Druk op R om de game te herstarten");
 
