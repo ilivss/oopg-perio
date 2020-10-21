@@ -8,9 +8,17 @@ import perio.Player;
 
 import java.util.List;
 
+/**
+ * @author Geurian Bouwman & Iliass El Kaddouri
+ *
+ * Een pushbutton is een spelobject dat geactiveert kan worden als en alleen als een object van de spelersklasse
+ * er bovenop staat.
+ */
 public class PushButton extends Button {
     /**
-     * Create a new AnimatedSpriteObject with a Sprite and set the amount of total frames.
+     * Constructor
+     *
+     * @param pushButtonSound   Geluid dat moet klinken wanneer de knop geactiveerd wordt.
      */
     public PushButton(Sound pushButtonSound) {
         super(new Sprite(PerioWorld.MEDIA_PATH.concat("buttons/pushButtonSprite.png")), pushButtonSound);

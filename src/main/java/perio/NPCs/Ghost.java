@@ -5,17 +5,32 @@ import nl.han.ica.oopg.sound.Sound;
 import perio.PerioWorld;
 import perio.Player;
 
+/**
+ * @author Geurian Bouwman & Iliass El Kaddouri
+ *
+ * Een Ghost is een spelobject dat zelfstanding door de wereld beweegt.
+ * De beweging is horizontaal: van links naar recht of visa versa.
+ */
 public class Ghost extends NPC {
+
     /**
-     * Create a new AnimatedSpriteObject with a Sprite and set the amount of total frames.
+     * Constructor
      *
-     * @param leftBoundary
-     * @param rightBoundary
+     * @param ghostSound        Geluid dat moet klinken wanneer een ghost gedood wordt
+     * @param leftBoundary      Float die de linkergrens waarin dit object kan bewegen aangeeft.
+     * @param rightBoundary     Float die de rechtergrens waarin dit object kan bewegen aangeeft.
      */
-    public Ghost(PerioWorld world, Sound ghostSound, float leftBoundary, float rightBoundary) {
-        super(new Sprite(PerioWorld.MEDIA_PATH.concat("NPCs/ghostSprite.png")), world, ghostSound, leftBoundary, rightBoundary, 2);
+    public Ghost(Sound ghostSound, float leftBoundary, float rightBoundary) {
+        super(new Sprite(PerioWorld.MEDIA_PATH.concat("NPCs/ghostSprite.png")), ghostSound, leftBoundary, rightBoundary, 2);
     }
 
+    /**
+     * Functie voert eerst handleFight() van NPC klasse uit.
+     * Als een object van de Spelerklasse bovenop de ghost springt zal deze dood gaan en verdient de speler 2 punten.
+     * Als een ghost object de speler aanraakt zal de speler 1 leven verliezen.
+     *
+     * @param player    Speler object die met het NPC object collide.
+     */
     @Override
     protected void handleFight(Player player) {
         super.handleFight(player);

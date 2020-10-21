@@ -13,9 +13,13 @@ import processing.core.PVector;
 
 import java.util.List;
 
+/**
+ * @author Geurian Bouwman & Iliass El Kaddouri
+ *
+ * Een PlayerObject is een object dat... TODO: Documentatie schrijven
+ */
 public class Player extends AnimatedSpriteObject implements ICollidableWithTiles {
-
-    public enum Direction {
+    private enum Direction {
         IDLE,
         UP,
         RIGHT,
@@ -26,15 +30,19 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
     private final PerioWorld world;
     private Direction direction;
     private int playerNo;
+    private Sound gameOverSound;
     private int health;
     private int points;
 
-    private Sound gameOverSound;
-
-
+    /**
+     * Constructor
+     *
+     * @param world             Referentie naar de wereld.
+     * @param playerNo          Player nummer: 1 of 2?
+     * @param gameOverSound     Geluid dat moet klinken wanneer de Player 'dood' gaat.
+     */
     public Player(PerioWorld world, int playerNo, Sound gameOverSound) {
         super(new Sprite(playerNo == 1 ? PerioWorld.MEDIA_PATH.concat("characters/marioSprite.png") : PerioWorld.MEDIA_PATH.concat("characters/peachSprite.png")), 19);
-
         this.world = world;
         this.playerNo = playerNo;
         this.gameOverSound = gameOverSound;
@@ -54,31 +62,35 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
 
     @Override
     public void keyPressed(int keyCode, char key) {
-        // Controls Player 1
-        if (keyCode == world.UP && playerNo == 1) {
-            direction = Direction.UP;
-        } else if (keyCode == world.RIGHT && playerNo == 1) {
-            direction = Direction.RIGHT;
-        } else if (keyCode == world.DOWN && playerNo == 1) {
-            setFriction(0.02f);
-            direction = Direction.DOWN;
-        } else if (keyCode == world.LEFT && playerNo == 1) {
-            direction = Direction.LEFT;
-        } else if(key == ' ' && playerNo == 1){
-            System.out.println("row: " + getY() / 70);
+        if (PerioWorld.gameState == PerioWorld.GameState.START && keyCode == 82){
+            PerioWorld.gameState = PerioWorld.GameState.RUNNING;
         }
 
-        // Controls Player 2
-        if (keyCode == 87 && playerNo == 2) {           // W
-            direction = Direction.UP;
-        }
-        if (keyCode == 68 && playerNo == 2) {           // D
-            direction = Direction.RIGHT;
-        } else if (keyCode == 83 && playerNo == 2) {    // S
-            setFriction(0.02f);
-            direction = Direction.DOWN;
-        } else if (keyCode == 65 && playerNo == 2) {    // A
-            direction = Direction.LEFT;
+        if (PerioWorld.gameState == PerioWorld.GameState.RUNNING) {
+            // Controls Player 1
+            if (keyCode == world.UP && playerNo == 1) {
+                direction = Direction.UP;
+            } else if (keyCode == world.RIGHT && playerNo == 1) {
+                direction = Direction.RIGHT;
+            } else if (keyCode == world.DOWN && playerNo == 1) {
+                setFriction(0.02f);
+                direction = Direction.DOWN;
+            } else if (keyCode == world.LEFT && playerNo == 1) {
+                direction = Direction.LEFT;
+            }
+
+            // Controls Player 2
+            if (keyCode == 87 && playerNo == 2) {           // W
+                direction = Direction.UP;
+            }
+            if (keyCode == 68 && playerNo == 2) {           // D
+                direction = Direction.RIGHT;
+            } else if (keyCode == 83 && playerNo == 2) {    // S
+                setFriction(0.02f);
+                direction = Direction.DOWN;
+            } else if (keyCode == 65 && playerNo == 2) {    // A
+                direction = Direction.LEFT;
+            }
         }
     }
 
@@ -121,11 +133,9 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
     }
 
     /**
-     * Voert handelingen uit aan de hand van de variabele 'direction'
-     * <p>
+     * Voert handelingen uit aan de hand van de variabele 'direction'.
      * Wij hebben het bewegen van de spelers op deze manier geimplementeerd omdat het anders onmogelijk was om twee spelers
      * tegelijk te besturen. OOPG kan namelijk maar een keyCode tegelijk registreren in de methodes keyPressed() en keyReleased().
-     * <p>
      * Er kan alleen bewogen worden als de speler nog levens heeft.
      */
     private void handleDirection() {
@@ -171,7 +181,7 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
         }
     }
 
-    // Animations
+    // Animaties
     private void walkAnimation() {
         if (direction == Direction.RIGHT) {
             if (getCurrentFrameIndex() < 3 || getCurrentFrameIndex() > 10) {
@@ -182,7 +192,6 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
                 setCurrentFrameIndex(3);
             }
         } else if (direction == Direction.LEFT) {
-            // TODO: Fix animatie nu hetzelfde als rechts!
             if (getCurrentFrameIndex() < 11 || getCurrentFrameIndex() > 18) {
                 setCurrentFrameIndex(11);
             } else if (getCurrentFrameIndex() < 18) {
@@ -202,22 +211,42 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
     }
 
     // Getters & Setters
+    /**
+     * Player nummer kan 1 of 2 zijn.
+     *
+     * @return Player nummer van dit object.
+     */
     public int getPlayerNo() {
         return playerNo;
     }
 
+    /**
+     * @return Aantal punten dat dit Player object heeft.
+     */
     public int getPoints() {
         return points;
     }
 
+    /**
+     * Verandert het aantal punten van dit Player object met meegegeven waarde.
+     * @param points    Punten als integer.
+     */
     public void setPoints(int points) {
         this.points = points;
     }
 
+    /**
+     *
+     * @return Health van dit Player object.
+     */
     public int getHealth() {
         return health;
     }
 
+    /**
+     * Verandert het aantal levenpunten dat dit object heeft naar de meegegeven waarde.
+     * @param health    levenspunten als integer.
+     */
     public void setHealth(int health) {
         this.health = health;
 

@@ -4,7 +4,6 @@ import nl.han.ica.oopg.dashboard.Dashboard;
 import nl.han.ica.oopg.engine.GameEngine;
 import nl.han.ica.oopg.objects.GameObject;
 import nl.han.ica.oopg.objects.Sprite;
-import nl.han.ica.oopg.objects.SpriteObject;
 import nl.han.ica.oopg.objects.TextObject;
 import nl.han.ica.oopg.persistence.FilePersistence;
 import nl.han.ica.oopg.persistence.IPersistence;
@@ -34,25 +33,68 @@ import perio.tiles.FloorTile;
 import perio.tiles.LadderTile;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Timer;
 
+/**
+ * @author Geurian Bouwman & Iliass El Kaddouri
+ *
+ *  PerioWorld is een object dat... TODO: Documentatie schrijven
+ */
 public class PerioWorld extends GameEngine {
+    /**
+     * GameState enum wordt gebruikt om de staat van het spel te regelen.
+     * Deze enum wordt gebruikt in verschillende objecten.
+     */
+    public enum GameState {
+        START,
+        RUNNING,
+        END,
+    }
 
     // Global variabelen
+    /**
+     * Houdt bij welke state de game momenteel is. Maakt gebruik van enum GameState
+     */
+    public static GameState gameState;
+    /**
+     * Deze variabele maakt het makkelijker om te refereren naar media objecten in alle klassen.
+     * Gebruik: MEDIA_PATH.concat("path/to/media/file.png")
+     */
     public static String MEDIA_PATH = "src/main/java/perio/media/";
+
+    /**
+     * Breedte van de speelwereld.
+     */
     public static int WORLDWIDTH = 840;
+
+    /**
+     * Hoogte van de speelwereld.
+     */
     public static int WORLDHEIGHT = 2800;
+
+    /**
+     * Breedte van speelscherm
+     */
     public static int ZOOMWIDTH = 840;
+
+    /**
+     * Hoogte van speelscherm
+     */
     public static int ZOOMHEIGHT = 700;
-    private int timer;
-    private int timerout = 1;
 
     private IPersistence persistence;
     private int highscore;
+    private int timer;
+    private int timerout = 1;
+
+    // Dashboard Objects
     private TextObject playerOneDashboardText;
     private TextObject playerTwoDashboardText;
+    private TextObject startGameDashboardText;
     private TextObject endGameDashboardText;
+    private Dashboard dashboardStartGame;
+    private Dashboard dashboardEndGame;
+    private Dashboard dashboardPlayerOne;
+    private Dashboard dashboardPlayerTwo;
 
     // Game Objects
     private Player playerOne;
@@ -63,7 +105,6 @@ public class PerioWorld extends GameEngine {
     private ArrayList<Button> buttons;
     private ArrayList<IObstacle> obstacles;
     private ArrayList<NPC> NPCs;
-
 
     // Sounds
     private Sound backgroundSound;
@@ -82,38 +123,41 @@ public class PerioWorld extends GameEngine {
     public static void main(String[] args) {
         PerioWorld pw = new PerioWorld();
         pw.runSketch();
-
     }
 
     private void timer() {
         int endtime = 120;
         timer += 1;
         timerout = endtime - (timer / 60);
-//        System.out.println(timerout);
     }
 
     @Override
     public void setupGame() {
-        // init
+        // Spel initialiseren
+        gameState = GameState.START;
+
         initSound();
         initDashboard();
         initTileMap();
         initPersistence();
-
         initGameObjects();
 
         createViewWithViewport();
-
-        setHighscore(2);
-        System.out.println(highscore);
     }
 
     @Override
     public void update() {
         updateDashboard();
 
-        timer();
+        // Start timer wanneer spel start.
+        if (gameState == GameState.RUNNING) {
+            timer();
+        }
+
         // TODO: Stop game wanneer 1 vd 2 spelers dood gaat!
+        if (playerOne.getHealth() <= 0 || playerTwo.getHealth() <= 0) {
+            // stop game
+        }
     }
 
     /**
@@ -141,11 +185,16 @@ public class PerioWorld extends GameEngine {
      * Initialiseert dashboard
      */
     private void initDashboard() {
+        dashboardStartGame = new Dashboard(0, 0, (float) ZOOMWIDTH, ZOOMHEIGHT);
+        dashboardPlayerOne = new Dashboard(0, 0, (float) ZOOMWIDTH / 2, 120);
+        dashboardPlayerTwo = new Dashboard(0, 0, (float) ZOOMWIDTH / 2, 120);
 
-        Dashboard dashboardPlayerOne = new Dashboard(0, 0, (float) ZOOMWIDTH / 2, 120);
-        Dashboard dashboardPlayerTwo = new Dashboard(0, 0, (float) ZOOMWIDTH / 2, 120);
+        TextObject startGameDashboardTexttitle = new TextObject("Welkom bij perioworld", 25);
+        startGameDashboardTexttitle.setForeColor(255, 255, 255, 255);
 
-
+        startGameDashboardText = new TextObject("Spel uitleg", 15);
+        startGameDashboardText.setText("zorg dat je binnen de tijd het kasteel verlaat en haal de vlag op \nzorg dat allebei de spelers het eind van het level haalt anders ben je af!\n\n\n Druk op R om het spel te starten");        startGameDashboardText.setForeColor(255, 255, 255, 255);
+        dashboardStartGame.setBackground(15, 175, 41);
 
         playerOneDashboardText = new TextObject("Player One", 20);
         playerOneDashboardText.setForeColor(255, 255, 255, 255);
@@ -153,9 +202,13 @@ public class PerioWorld extends GameEngine {
         playerTwoDashboardText = new TextObject("Player Two", 20);
         playerTwoDashboardText.setForeColor(255, 255, 255, 255);
 
+        dashboardStartGame.addGameObject(startGameDashboardTexttitle, 250, 200);
+        dashboardStartGame.addGameObject(startGameDashboardText, 180, 250);
         dashboardPlayerOne.addGameObject(playerOneDashboardText);
         dashboardPlayerTwo.addGameObject(playerTwoDashboardText);
 
+
+        addDashboard(dashboardStartGame, 0, 0);
         addDashboard(dashboardPlayerOne, 0, 0);
         addDashboard(dashboardPlayerTwo, ZOOMWIDTH / 2, 0);
     }
@@ -167,10 +220,13 @@ public class PerioWorld extends GameEngine {
         playerOneDashboardText.setText("Player One\n" + "Levens: " + playerOne.getHealth() + "\n" + "Punten: " + playerOne.getPoints() + "\n" + "Timer: " + timerout);
         playerTwoDashboardText.setText("Player Two\n" + "Levens: " + playerTwo.getHealth() + "\n" + "Punten: " + playerTwo.getPoints());
 
-        // laat eindscherm zien wanneer spelers af zijn
-        if (playerOne.getHealth() == 0 && playerTwo.getHealth() == 0 || timerout <= 0) {
+        if (gameState == GameState.RUNNING) {
+            deleteDashboard(dashboardStartGame);
 
-            Dashboard dashboardStartGame = new Dashboard(0, 0, (float) ZOOMWIDTH, ZOOMHEIGHT);
+        }
+
+        // laat eindscherm zien wanneer spelers af zijn
+        if (playerOne.getHealth() == 0 || playerTwo.getHealth() == 0 || timerout <= 0) {
             Dashboard dashboardEndGame = new Dashboard(0, 0, (float) ZOOMWIDTH, ZOOMHEIGHT);
 
             endGameDashboardText = new TextObject("Game over", 20);
@@ -197,7 +253,7 @@ public class PerioWorld extends GameEngine {
         addGameObject(playerTwo, columnToXCoordinate(1), rowToYCoordinate(37));
 
         // Follow Object
-        followObject = new FollowObject(this, playerOne, playerTwo);
+        followObject = new FollowObject(playerOne, playerTwo);
         addGameObject(followObject);
 
         // Consumables
@@ -293,10 +349,10 @@ public class PerioWorld extends GameEngine {
 
         // NPCs
         NPCs = new ArrayList<>();
-        NPCs.add(new Ghost(this, ghostSound, columnToXCoordinate(5), columnToXCoordinate(9)));     // 0
-        NPCs.add(new Ghost(this, ghostSound, columnToXCoordinate(4), columnToXCoordinate(7)));     // 1
-        NPCs.add(new Ghost(this, ghostSound, columnToXCoordinate(0), columnToXCoordinate(6)));     // 2
-        NPCs.add(new Frog(this,frogSound, columnToXCoordinate(5), columnToXCoordinate(11)));      // 3
+        NPCs.add(new Ghost(ghostSound, columnToXCoordinate(5), columnToXCoordinate(9)));     // 0
+        NPCs.add(new Ghost(ghostSound, columnToXCoordinate(4), columnToXCoordinate(7)));     // 1
+        NPCs.add(new Ghost(ghostSound, columnToXCoordinate(0), columnToXCoordinate(6)));     // 2
+        NPCs.add(new Frog(frogSound, columnToXCoordinate(5), columnToXCoordinate(11)));      // 3
 
         addGameObject(NPCs.get(0), columnToXCoordinate(9), rowToYCoordinate(32));
         addGameObject(NPCs.get(1), columnToXCoordinate(4), rowToYCoordinate(28));
@@ -441,13 +497,21 @@ public class PerioWorld extends GameEngine {
         view.setBackground(loadImage(MEDIA_PATH.concat("backgrounds/bg.png")));
     }
 
+    /**
+     * Getter functie voor highscore variabele
+     * @return Huidige highscore als integer.
+     */
     public int getHighscore() {
         return highscore;
     }
 
-    public void setHighscore(int highscore) {
-        if (highscore > this.highscore){
-            this.highscore = highscore;
+    /**
+     * Setter functie voor highscore variabele. Controleert eerst of de meegegeven highscore groter is dan de huidige highscore.
+     * @param   score   Integer met de score als variabele.
+     */
+    public void setHighscore(int score) {
+        if (score > this.highscore){
+            this.highscore = score;
             persistence.saveData(Integer.toString(highscore));
         }
     }
@@ -455,8 +519,8 @@ public class PerioWorld extends GameEngine {
     /**
      * Helper functie: Converteer index van column in de tileMap naar daadwerkelijk X Coordinaat (float)
      *
-     * @param column Index van column in tileMap waar object geplaatst moet worden.
-     * @return X Coordinaat in float
+     * @param   column    Index van column in tileMap waar object geplaatst moet worden.
+     * @return  X Coordinaat als float
      */
     private float columnToXCoordinate(int column) {
         return column * tileMap.getTileSize();
@@ -465,8 +529,8 @@ public class PerioWorld extends GameEngine {
     /**
      * Helper functie: Converteer index van row in de tileMap naar daadwerkelijk Y Coordinaat (float)
      *
-     * @param row Index van row in tileMap waar object geplaatst moet worden.
-     * @return Y Coordinaat in float
+     * @param   row       Index van row in tileMap waar object geplaatst moet worden.
+     * @return  Y Coordinaat als float
      */
     private float rowToYCoordinate(int row) {
         return row * tileMap.getTileSize();

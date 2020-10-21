@@ -10,15 +10,22 @@ import perio.obstacles.IObstacle;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * @author Geurian Bouwman & Iliass El Kaddouri
+ *
+ * De abstracte knopklasse.
+ */
 public abstract class Button extends AnimatedSpriteObject implements ICollidableWithGameObjects {
     protected boolean isOn;
     protected Sound buttonSound;
     protected ArrayList<IObstacle> targets;   // Doelwitten
 
     /**
-     * Create a new AnimatedSpriteObject with a Sprite and set the amount of total frames.
+     * Constructor
      *
-     * @param sprite The Sprite to be used
+     * @param sprite        Sprite die gebruikt moet worden
+     * @param buttonSound   Geluid dat moet klinken als de state van de knop (isOn) veranderd.
      */
     public Button(Sprite sprite, Sound buttonSound) {
         super(sprite, 2);
@@ -27,6 +34,28 @@ public abstract class Button extends AnimatedSpriteObject implements ICollidable
         this.targets = new ArrayList<>();
 
         setCurrentFrameIndex(0);
+    }
+
+    /**
+     * Voegt doelwit toe aan knop.
+     * @param target    Doelwit dat geschakeld moet worden met deze knop.
+     */
+    public void addTarget(IObstacle target) {
+        targets.add(target);
+    }
+
+    /**
+     * Speelt knop geluid af en voert de handleTarget() functie van elk doelwit van deze knop uit.
+     */
+    public void executeButtonAction() {
+        // TODO Fix geluid, hij wordt pas afgespeeld wanneer player van de knop afgaat, terwijl hij eigenlijk afgespeeld  moet worden wanneer hij erop staat
+        // Ik weet  waarom dit is: deze method wordt  constant opgeroepen in update(); waardoor het geluidje constant gerewind wordt. Hoe kunnen we dit anders doen?
+        buttonSound.rewind();
+        buttonSound.play();
+
+        for (IObstacle t : targets) {
+            t.handleTarget();
+        }
     }
 
     @Override
@@ -40,20 +69,4 @@ public abstract class Button extends AnimatedSpriteObject implements ICollidable
 
     @Override
     public abstract void gameObjectCollisionOccurred(List<GameObject> collidedGameObjects);
-
-
-    public void executeButtonAction() {
-        // TODO Fix geluid, hij wordt pas afgespeeld wanneer player van de knop afgaat, terwijl hij eigenlijk afgespeeld  moet worden wanneer hij erop staat
-        // Ik weet  waarom dit is: deze method wordt  constant opgeroepen in update(); waardoor het geluidje constant gerewind wordt. Hoe kunnen we dit anders doen?
-        buttonSound.rewind();
-        buttonSound.play();
-
-        for (IObstacle t : targets) {
-            t.handleTarget();
-        }
-    }
-
-    public void addTarget(IObstacle target) {
-        targets.add(target);
-    }
 }

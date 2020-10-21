@@ -11,6 +11,11 @@ import perio.Player;
 
 import java.util.List;
 
+/**
+ * @author Geurian Bouwman & Iliass El Kaddouri
+ *
+ * Een Lift is een spelobject dat horizontaal in de wereld beweegt, deze actie kan geactiveerd worden door handleTarget() aan te roepen.
+ */
 public class Lift extends SpriteObject implements ICollidableWithGameObjects, IObstacle {
     private PerioWorld world;
     private Sound liftSound;
@@ -18,20 +23,35 @@ public class Lift extends SpriteObject implements ICollidableWithGameObjects, IO
     private float maxHeight;
 
     /**
-     * Create a new SpriteObject with a Sprite object.
+     * Constructor
      *
-     * @param world     asdasdasd
-     * @param liftSound Geluid dat afgespeelt moet worden wanneer lift beweegt.
-     * @param minHeight Y Coordinaat wanneer lift omlaag is.
-     * @param maxHeight Y Coordinaat wanneer lift omhoog is.
+     * @param world             Referentie naar de wereld.
+     * @param liftSound         Geluid dat geklonken moet worden als de lift beweegt.
+     * @param startPosition     Y coordinaat als start positie van de lift.
+     * @param endPosition       Y coordinaat als eind positie van de lift.
      */
-    public Lift(PerioWorld world, Sound liftSound, float minHeight, float maxHeight) {
+    public Lift(PerioWorld world, Sound liftSound, float startPosition, float endPosition) {
         super(new Sprite(PerioWorld.MEDIA_PATH.concat("obstacles/liftSprite.png")));
         this.world = world;
         this.liftSound = liftSound;
-        this.minHeight = minHeight;
-        this.maxHeight = maxHeight;
+        this.minHeight = startPosition;
+        this.maxHeight = endPosition;
+
+        // setGravity zodat lift vanzelf weer naar beneden valt.
         setGravity(0.5f);
+    }
+
+    /**
+     * Laat de lift bewegen van de start positie naar de eind positie.
+     */
+    @Override
+    public void handleTarget() {
+        // TODO Fix geluid, hij wordt pas afgespeeld wanneer player van de knop afgaat, terwijl hij eigenlijk afgespeeld  moet worden wanneer hij erop staat
+        // Ik weet  waarom dit is: deze method wordt  constant opgeroepen in update(); waardoor het geluidje constant gerewind wordt. Hoe kunnen we dit anders doen?
+        liftSound.rewind();
+        liftSound.play();
+
+        setDirectionSpeed(0, 5);
     }
 
     @Override
@@ -42,15 +62,6 @@ public class Lift extends SpriteObject implements ICollidableWithGameObjects, IO
         } else if (getY() >= minHeight) {
             setY(minHeight);
         }
-    }
-
-    @Override
-    public void handleTarget() {
-        // TODO Fix geluid, hij wordt pas afgespeeld wanneer player van de knop afgaat, terwijl hij eigenlijk afgespeeld  moet worden wanneer hij erop staat
-        liftSound.rewind();
-        liftSound.play();
-        setDirectionSpeed(0, 5);
-
     }
 
     @Override
