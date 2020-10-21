@@ -62,6 +62,13 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
 
     @Override
     public void keyPressed(int keyCode, char key) {
+<<<<<<< HEAD
+        if (PerioWorld.gameState == PerioWorld.GameState.START && keyCode == 82){
+            PerioWorld.gameState = PerioWorld.GameState.RUNNING;
+        }
+
+        if (PerioWorld.gameState == PerioWorld.GameState.RUNNING) {
+=======
         if (PerioWorld.gamestate == PerioWorld.GameState.START && keyCode == 83){
             PerioWorld.gamestate = PerioWorld.GameState.RUNNING;
         } else if (PerioWorld.gamestate == PerioWorld.GameState.END && keyCode == 82){
@@ -70,6 +77,7 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
         }
 
         if (PerioWorld.gamestate == PerioWorld.GameState.RUNNING) {
+>>>>>>> 00d76a9fee6254c6c381032ba3533ab1562bb7ac
             // Controls Player 1
             if (keyCode == world.UP && playerNo == 1) {
                 direction = Direction.UP;
@@ -80,6 +88,11 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
                 direction = Direction.DOWN;
             } else if (keyCode == world.LEFT && playerNo == 1) {
                 direction = Direction.LEFT;
+<<<<<<< HEAD
+=======
+            } else if (key == ' ' && playerNo == 1) {
+                System.out.println("row: " + getY() / 70);
+>>>>>>> 00d76a9fee6254c6c381032ba3533ab1562bb7ac
             }
 
             // Controls Player 2

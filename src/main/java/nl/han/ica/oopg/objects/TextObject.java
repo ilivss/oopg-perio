@@ -23,7 +23,7 @@ public class TextObject extends GameObject {
         setFontSize(fontSize);
     }
 
-    /**
+     /**
      * Override or implement this method to handle updates inside this object.
      */
     @Override
