@@ -54,31 +54,37 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
 
     @Override
     public void keyPressed(int keyCode, char key) {
-        // Controls Player 1
-        if (keyCode == world.UP && playerNo == 1) {
-            direction = Direction.UP;
-        } else if (keyCode == world.RIGHT && playerNo == 1) {
-            direction = Direction.RIGHT;
-        } else if (keyCode == world.DOWN && playerNo == 1) {
-            setFriction(0.02f);
-            direction = Direction.DOWN;
-        } else if (keyCode == world.LEFT && playerNo == 1) {
-            direction = Direction.LEFT;
-        } else if(key == ' ' && playerNo == 1){
-            System.out.println("row: " + getY() / 70);
+        if (PerioWorld.gamestate == PerioWorld.GameState.START && keyCode == 82){
+            PerioWorld.gamestate = PerioWorld.GameState.RUNNING;
         }
 
-        // Controls Player 2
-        if (keyCode == 87 && playerNo == 2) {           // W
-            direction = Direction.UP;
-        }
-        if (keyCode == 68 && playerNo == 2) {           // D
-            direction = Direction.RIGHT;
-        } else if (keyCode == 83 && playerNo == 2) {    // S
-            setFriction(0.02f);
-            direction = Direction.DOWN;
-        } else if (keyCode == 65 && playerNo == 2) {    // A
-            direction = Direction.LEFT;
+        if (PerioWorld.gamestate == PerioWorld.GameState.RUNNING) {
+            // Controls Player 1
+            if (keyCode == world.UP && playerNo == 1) {
+                direction = Direction.UP;
+            } else if (keyCode == world.RIGHT && playerNo == 1) {
+                direction = Direction.RIGHT;
+            } else if (keyCode == world.DOWN && playerNo == 1) {
+                setFriction(0.02f);
+                direction = Direction.DOWN;
+            } else if (keyCode == world.LEFT && playerNo == 1) {
+                direction = Direction.LEFT;
+            } else if (key == ' ' && playerNo == 1) {
+                System.out.println("row: " + getY() / 70);
+            }
+
+            // Controls Player 2
+            if (keyCode == 87 && playerNo == 2) {           // W
+                direction = Direction.UP;
+            }
+            if (keyCode == 68 && playerNo == 2) {           // D
+                direction = Direction.RIGHT;
+            } else if (keyCode == 83 && playerNo == 2) {    // S
+                setFriction(0.02f);
+                direction = Direction.DOWN;
+            } else if (keyCode == 65 && playerNo == 2) {    // A
+                direction = Direction.LEFT;
+            }
         }
     }
 
