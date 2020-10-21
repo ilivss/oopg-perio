@@ -36,6 +36,7 @@ src/main/java/nl/han/ica/waterworld/media/bubblesPopped.txt
 
 # OOPG
 src/main/java/nl/han/ica/oopdprocessingenginehan/logger/Log.log
+src/main/java/perio/media/highscore.txt
 oopg.log
 
 # Visual Studio Code
