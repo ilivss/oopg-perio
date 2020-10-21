@@ -75,6 +75,7 @@ public class PerioWorld extends GameEngine {
     private Sound lavaSound;
     private Sound flagSound;
     private Sound ghostSound;
+    private Sound frogSound;
 
     public static void main(String[] args) {
         PerioWorld pw = new PerioWorld();
@@ -125,9 +126,10 @@ public class PerioWorld extends GameEngine {
         lavaSound = new Sound(this, MEDIA_PATH.concat("obstacles/lavaSound.mp3"));
         flagSound = new Sound(this, MEDIA_PATH.concat("obstacles/flagSound.mp3"));
         ghostSound = new Sound(this, MEDIA_PATH.concat("NPCs/ghostSound.mp3"));
+        frogSound = new Sound(this, MEDIA_PATH.concat("NPCs/frogSound.mp3"));
 
         // TODO: Zet achtergrond muziek aan!
-//        backgroundSound.loop(-1);
+        backgroundSound.loop(-1);
     }
 
     /**
@@ -184,10 +186,10 @@ public class PerioWorld extends GameEngine {
 
         // Players
         playerOne = new Player(this, 1, gameOverSound);
-        addGameObject(playerOne, columnToXCoordinate(3), rowToYCoordinate(36));
+        addGameObject(playerOne, columnToXCoordinate(0), rowToYCoordinate(37));
 
         playerTwo = new Player(this, 2, gameOverSound);
-        addGameObject(playerTwo, columnToXCoordinate(2), rowToYCoordinate(36));
+        addGameObject(playerTwo, columnToXCoordinate(1), rowToYCoordinate(37));
 
         // Follow Object
         followObject = new FollowObject(this, playerOne, playerTwo);
@@ -195,6 +197,57 @@ public class PerioWorld extends GameEngine {
 
         // Consumables
         consumables = new ArrayList<>();
+        consumables.add(new Coin(this, coinSound));
+        consumables.add(new Coin(this, coinSound));
+        consumables.add(new Coin(this, coinSound));
+        consumables.add(new Coin(this, coinSound));
+        consumables.add(new Coin(this, coinSound));
+        consumables.add(new Coin(this, coinSound));
+        consumables.add(new Coin(this, coinSound));
+        consumables.add(new Coin(this, coinSound));
+        consumables.add(new Coin(this, coinSound));
+        consumables.add(new Coin(this, coinSound));
+        consumables.add(new Gem(this, gemSound));
+        consumables.add(new Gem(this, gemSound));
+        consumables.add(new Gem(this, gemSound));
+        consumables.add(new Gem(this, gemSound));
+        consumables.add(new Gem(this, gemSound));
+        consumables.add(new Gem(this, gemSound));
+        consumables.add(new Gem(this, gemSound));
+        consumables.add(new Gem(this, gemSound));
+        consumables.add(new Gem(this, gemSound));
+        consumables.add(new Gem(this, gemSound));
+        consumables.add(new Health(this, healthSound));
+        consumables.add(new Health(this, healthSound));
+        consumables.add(new Health(this, healthSound));
+        consumables.add(new Health(this, healthSound));
+
+        addGameObject(consumables.get(0), columnToXCoordinate(4), rowToYCoordinate(37));
+        addGameObject(consumables.get(1), columnToXCoordinate(6), rowToYCoordinate(36));
+        addGameObject(consumables.get(2), columnToXCoordinate(8), rowToYCoordinate(37));
+        addGameObject(consumables.get(3), columnToXCoordinate(2), rowToYCoordinate(29));
+        addGameObject(consumables.get(4), columnToXCoordinate(5), rowToYCoordinate(27));
+        addGameObject(consumables.get(5), columnToXCoordinate(10), rowToYCoordinate(25));
+        addGameObject(consumables.get(6), columnToXCoordinate(3), rowToYCoordinate(16));
+        addGameObject(consumables.get(7), columnToXCoordinate(1), rowToYCoordinate(11));
+        addGameObject(consumables.get(8), columnToXCoordinate(0), rowToYCoordinate(12));
+        addGameObject(consumables.get(9), columnToXCoordinate(1), rowToYCoordinate(13));
+        addGameObject(consumables.get(10), columnToXCoordinate(5), rowToYCoordinate(36));
+        addGameObject(consumables.get(11), columnToXCoordinate(7), rowToYCoordinate(36));
+        addGameObject(consumables.get(12), columnToXCoordinate(10), rowToYCoordinate(37));
+        addGameObject(consumables.get(13), columnToXCoordinate(1), rowToYCoordinate(30));
+        addGameObject(consumables.get(14), columnToXCoordinate(6), rowToYCoordinate(27));
+        addGameObject(consumables.get(15), columnToXCoordinate(11), rowToYCoordinate(25));
+        addGameObject(consumables.get(16), columnToXCoordinate(7), rowToYCoordinate(16));
+        addGameObject(consumables.get(17), columnToXCoordinate(0), rowToYCoordinate(11));
+        addGameObject(consumables.get(18), columnToXCoordinate(1), rowToYCoordinate(12));
+        addGameObject(consumables.get(19), columnToXCoordinate(0), rowToYCoordinate(13));
+        addGameObject(consumables.get(20), columnToXCoordinate(3), rowToYCoordinate(28));
+        addGameObject(consumables.get(21), columnToXCoordinate(0), rowToYCoordinate(23));
+        addGameObject(consumables.get(22), columnToXCoordinate(11), rowToYCoordinate(16));
+        addGameObject(consumables.get(23), columnToXCoordinate(0), rowToYCoordinate(0));
+
+
 
         // Buttons
         buttons = new ArrayList<>();
@@ -238,7 +291,7 @@ public class PerioWorld extends GameEngine {
         NPCs.add(new Ghost(this, ghostSound, columnToXCoordinate(5), columnToXCoordinate(9)));     // 0
         NPCs.add(new Ghost(this, ghostSound, columnToXCoordinate(4), columnToXCoordinate(7)));     // 1
         NPCs.add(new Ghost(this, ghostSound, columnToXCoordinate(0), columnToXCoordinate(6)));     // 2
-        NPCs.add(new Frog(this,ghostSound, columnToXCoordinate(5), columnToXCoordinate(11)));      // 3
+        NPCs.add(new Frog(this,frogSound, columnToXCoordinate(5), columnToXCoordinate(11)));      // 3
 
         addGameObject(NPCs.get(0), columnToXCoordinate(9), rowToYCoordinate(32));
         addGameObject(NPCs.get(1), columnToXCoordinate(4), rowToYCoordinate(28));
