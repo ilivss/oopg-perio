@@ -34,11 +34,12 @@ import perio.tiles.FloorTile;
 import perio.tiles.LadderTile;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Timer;
 
 public class PerioWorld extends GameEngine {
 
-    // Game vars
+    // Global variabelen
     public static String MEDIA_PATH = "src/main/java/perio/media/";
     public static int WORLDWIDTH = 840;
     public static int WORLDHEIGHT = 2800;
@@ -48,6 +49,7 @@ public class PerioWorld extends GameEngine {
     private int timerout = 1;
 
     private IPersistence persistence;
+    private int highscore;
     private TextObject playerOneDashboardText;
     private TextObject playerTwoDashboardText;
     private TextObject endGameDashboardText;
@@ -101,6 +103,9 @@ public class PerioWorld extends GameEngine {
         initGameObjects();
 
         createViewWithViewport();
+
+        setHighscore(2);
+        System.out.println(highscore);
     }
 
     @Override
@@ -128,7 +133,7 @@ public class PerioWorld extends GameEngine {
         ghostSound = new Sound(this, MEDIA_PATH.concat("NPCs/ghostSound.mp3"));
         frogSound = new Sound(this, MEDIA_PATH.concat("NPCs/frogSound.mp3"));
 
-        // TODO: Zet achtergrond muziek aan!
+        // Achtergrond muziek
         backgroundSound.loop(-1);
     }
 
@@ -415,10 +420,12 @@ public class PerioWorld extends GameEngine {
      * Elke startup van het spel zal eerst proberen eerdere data te recoveren.
      */
     private void initPersistence() {
-        persistence = new FilePersistence(MEDIA_PATH.concat("highscores.txt"));
+        persistence = new FilePersistence("main/java/perio/media/highscore.txt");
 
         if (persistence.fileExists()) {
-            // Doe iets met data in bestand...
+            highscore = Integer.parseInt(persistence.loadDataString());
+        } else {
+            highscore = 0;
         }
     }
 
@@ -432,6 +439,17 @@ public class PerioWorld extends GameEngine {
         setView(view);
         size(ZOOMWIDTH, ZOOMHEIGHT);
         view.setBackground(loadImage(MEDIA_PATH.concat("backgrounds/bg.png")));
+    }
+
+    public int getHighscore() {
+        return highscore;
+    }
+
+    public void setHighscore(int highscore) {
+        if (highscore > this.highscore){
+            this.highscore = highscore;
+            persistence.saveData(Integer.toString(highscore));
+        }
     }
 
     /**
