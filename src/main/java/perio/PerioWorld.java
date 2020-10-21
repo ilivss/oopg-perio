@@ -46,12 +46,13 @@ public class PerioWorld extends GameEngine {
         END,
     }
 
-    public static GameState gamestate;
+    public static GameState gamestate = GameState.START;
     public static String MEDIA_PATH = "src/main/java/perio/media/";
     public static int WORLDWIDTH = 840;
     public static int WORLDHEIGHT = 2800;
     public static int ZOOMWIDTH = 840;
     public static int ZOOMHEIGHT = 700;
+    
     private int timer;
     private int timerout = 1;
 
@@ -60,6 +61,8 @@ public class PerioWorld extends GameEngine {
     private TextObject playerTwoDashboardText;
     private TextObject startGameDashboardText;
     private TextObject endGameDashboardText;
+    private TextObject startGameDashboardTextTitle;
+
     private Dashboard dashboardStartGame;
     private Dashboard dashboardEndGame;
     private Dashboard dashboardPlayerOne;
@@ -106,8 +109,6 @@ public class PerioWorld extends GameEngine {
     @Override
     public void setupGame() {
         // init
-        gamestate = GameState.START;
-
         initSound();
         initDashboard();
         initTileMap();
@@ -123,6 +124,7 @@ public class PerioWorld extends GameEngine {
         updateDashboard();
 
         if (gamestate == GameState.RUNNING) {
+            deleteDashboard(dashboardEndGame);
             timer();
         }
 
@@ -158,13 +160,18 @@ public class PerioWorld extends GameEngine {
         dashboardStartGame = new Dashboard(0, 0, (float) ZOOMWIDTH, ZOOMHEIGHT);
         dashboardPlayerOne = new Dashboard(0, 0, (float) ZOOMWIDTH / 2, 120);
         dashboardPlayerTwo = new Dashboard(0, 0, (float) ZOOMWIDTH / 2, 120);
+        dashboardEndGame = new Dashboard(0, 0, (float) ZOOMWIDTH, ZOOMHEIGHT);
 
-        TextObject startGameDashboardTexttitle = new TextObject("Welkom bij perioworld", 25);
-        startGameDashboardTexttitle.setForeColor(255, 255, 255, 255);
+        startGameDashboardTextTitle = new TextObject("Welkom bij perioworld", 25);
+        startGameDashboardTextTitle.setForeColor(255, 255, 255, 255);
 
         startGameDashboardText = new TextObject("Spel uitleg", 15);
-        startGameDashboardText.setText("zorg dat je binnen de tijd het kasteel verlaat en haal de vlag op \nzorg dat allebei de spelers het eind van het level haalt anders ben je af!\n\n\n Druk op R om het spel te starten");        startGameDashboardText.setForeColor(255, 255, 255, 255);
+        startGameDashboardText.setText("zorg dat je binnen de tijd het kasteel verlaat en haal de vlag op \nzorg dat allebei de spelers het eind van het level haalt anders ben je af!\n\n\n Druk op S om het spel te starten");        startGameDashboardText.setForeColor(255, 255, 255, 255);
         dashboardStartGame.setBackground(15, 175, 41);
+
+        endGameDashboardText = new TextObject("Game over", 20);
+        endGameDashboardText.setForeColor(255, 255, 255, 255);
+        dashboardEndGame.setBackground(174, 126,126);
 
         playerOneDashboardText = new TextObject("Player One", 20);
         playerOneDashboardText.setForeColor(255, 255, 255, 255);
@@ -172,15 +179,18 @@ public class PerioWorld extends GameEngine {
         playerTwoDashboardText = new TextObject("Player Two", 20);
         playerTwoDashboardText.setForeColor(255, 255, 255, 255);
 
-        dashboardStartGame.addGameObject(startGameDashboardTexttitle, 250, 200);
+        dashboardStartGame.addGameObject(startGameDashboardTextTitle, 280, 200);
         dashboardStartGame.addGameObject(startGameDashboardText, 180, 250);
+
+        dashboardEndGame.addGameObject(endGameDashboardText, 300, 250);
+
         dashboardPlayerOne.addGameObject(playerOneDashboardText);
         dashboardPlayerTwo.addGameObject(playerTwoDashboardText);
 
-
-        addDashboard(dashboardStartGame, 0, 0);
         addDashboard(dashboardPlayerOne, 0, 0);
         addDashboard(dashboardPlayerTwo, ZOOMWIDTH / 2, 0);
+        addDashboard(dashboardStartGame, 0, 0);
+
     }
 
     /**
@@ -192,19 +202,15 @@ public class PerioWorld extends GameEngine {
 
         if (gamestate == GameState.RUNNING) {
             deleteDashboard(dashboardStartGame);
-
+            deleteDashboard(dashboardEndGame);
         }
 
         // laat eindscherm zien wanneer spelers af zijn
         if (playerOne.getHealth() == 0 || playerTwo.getHealth() == 0 || timerout <= 0) {
-            Dashboard dashboardEndGame = new Dashboard(0, 0, (float) ZOOMWIDTH, ZOOMHEIGHT);
+            gamestate = GameState.END;
+            backgroundSound.pause();
+            endGameDashboardText.setText("Game over\n" + "Player one Punten: "+ playerOne.getPoints() + "\n" + "Player two Punten: " + playerTwo.getPoints() + "\n" + "Druk op R om de game te herstarten");
 
-            endGameDashboardText = new TextObject("Game over", 20);
-            endGameDashboardText.setText("Game over\n" + "Player one Punten: "+ playerOne.getPoints() + "\n" + "Player two Punten: " + playerTwo.getPoints());
-            endGameDashboardText.setForeColor(255, 255, 255, 255);
-
-            dashboardEndGame.addGameObject(endGameDashboardText, 300, 250);
-            dashboardEndGame.setBackground(174, 126,126);
 
             addDashboard(dashboardEndGame, 0, 0);
         }
@@ -214,7 +220,6 @@ public class PerioWorld extends GameEngine {
      * Initialiseert alle spel objecten
      */
     private void initGameObjects() {
-
         // Players
         playerOne = new Player(this, 1, gameOverSound);
         addGameObject(playerOne, columnToXCoordinate(0), rowToYCoordinate(37));

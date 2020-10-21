@@ -54,8 +54,11 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
 
     @Override
     public void keyPressed(int keyCode, char key) {
-        if (PerioWorld.gamestate == PerioWorld.GameState.START && keyCode == 82){
+        if (PerioWorld.gamestate == PerioWorld.GameState.START && keyCode == 83){
             PerioWorld.gamestate = PerioWorld.GameState.RUNNING;
+        } else if (PerioWorld.gamestate == PerioWorld.GameState.END && keyCode == 82){
+            PerioWorld.gamestate = PerioWorld.GameState.RUNNING;
+            world.setupGame();
         }
 
         if (PerioWorld.gamestate == PerioWorld.GameState.RUNNING) {
