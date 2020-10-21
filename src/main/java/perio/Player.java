@@ -219,9 +219,9 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
     }
 
     public void setHealth(int health) {
-        if (this.health > 0) {
-            this.health = health;
-        } else {
+        this.health = health;
+
+        if (this.health <= 0) {
             gameOverSound.rewind();
             gameOverSound.play();
 
