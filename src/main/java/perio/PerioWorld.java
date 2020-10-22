@@ -33,6 +33,7 @@ import perio.tiles.DecorationTile;
 import perio.tiles.FloorTile;
 import perio.tiles.LadderTile;
 
+import java.sql.Struct;
 import java.util.ArrayList;
 
 /**
@@ -85,8 +86,9 @@ public class PerioWorld extends GameEngine {
 
     private IPersistence persistence;
     private int highscore;
-    private int timer;
+    private int endtime;
     private int timerout = 1;
+    private int timer;
 
     // Dashboard Objects
     private TextObject playerOneDashboardText;
@@ -130,7 +132,6 @@ public class PerioWorld extends GameEngine {
     }
 
     private void timer() {
-        int endtime = 120;
         timer += 1;
         timerout = endtime - (timer / 60);
     }
@@ -192,7 +193,7 @@ public class PerioWorld extends GameEngine {
      */
     private void initDashboard() {
         dashboardStartGame = new Dashboard(0, 0, (float) ZOOMWIDTH, ZOOMHEIGHT);
-        dashboardPlayerOne = new Dashboard(0, 0, (float) ZOOMWIDTH / 2, 120);
+        dashboardPlayerOne = new Dashboard(0, 0, (float) ZOOMWIDTH / 2, 150);
         dashboardPlayerTwo = new Dashboard(0, 0, (float) ZOOMWIDTH / 2, 120);
         dashboardEndGame = new Dashboard(0, 0, (float) ZOOMWIDTH, ZOOMHEIGHT);
 
@@ -230,7 +231,7 @@ public class PerioWorld extends GameEngine {
      * Updates dashboard met huidige spelers informatie
      */
     private void updateDashboard() {
-        playerOneDashboardText.setText("Player One\n" + "Levens: " + playerOne.getHealth() + "\n" + "Punten: " + playerOne.getPoints() + "\n" + "Timer: " + timerout);
+        playerOneDashboardText.setText("Player One\n" + "Levens: " + playerOne.getHealth() + "\n" + "Punten: " + playerOne.getPoints() + "\n" + "Highscore: " + getHighscore() + "\n" + "Timer: " + timerout);
         playerTwoDashboardText.setText("Player Two\n" + "Levens: " + playerTwo.getHealth() + "\n" + "Punten: " + playerTwo.getPoints());
 
         if (gameState == GameState.RUNNING) {
@@ -238,17 +239,14 @@ public class PerioWorld extends GameEngine {
         }
 
         // laat eindscherm zien wanneer spelers af zijn
-        if (playerOne.getHealth() == 0 || playerTwo.getHealth() == 0 || timerout <= 0 || Flag.up == true && gameState == GameState.RUNNING) {
+        if (playerOne.getHealth() == 0 || playerTwo.getHealth() == 0 || timerout <= 0 && gameState == GameState.RUNNING) {
+            String gameEnd = "Game over probeer opnieuw";
             gameState = GameState.END;
             backgroundSound.pause();
 
-            if (Flag.up == true) {
-                if (getHighscore() < (playerOne.getPoints() + playerTwo.getPoints() + timerout ) ) {
-                    setHighscore(playerOne.getPoints() + playerTwo.getPoints() + timerout);
-                }
-            }
 
-            endGameDashboardText.setText("Game over\n" + "Player one Punten: "+ playerOne.getPoints() + "\n" + "Player two Punten: " + playerTwo.getPoints()  + "\n" + "Resterende tijd: " + timerout + "\n" + "Totale score: " + (playerOne.getPoints() + playerTwo.getPoints() + timerout ) + "\nHighscore: " + getHighscore() + "\nDruk op R om de game te herstarten" ) ;
+
+            endGameDashboardText.setText(gameEnd + "\n" + "Player one Punten: "+ playerOne.getPoints() + "\n" + "Player two Punten: " + playerTwo.getPoints()  + "\n" + "Resterende tijd: " + timerout + "\n" + "Totale score: " + (playerOne.getPoints() + playerTwo.getPoints() + timerout ) + "\nHighscore: " + getHighscore() + "\nDruk op R om de game te herstarten" ) ;
 
             addDashboard(dashboardEndGame, 0, 0);
 
@@ -262,6 +260,10 @@ public class PerioWorld extends GameEngine {
      * Initialiseert alle spel objecten
      */
     private void initGameObjects() {
+        //zet de timer
+        timer = 0;
+        endtime = 120;
+
         // Players
         playerOne = new Player(this, 1, gameOverSound);
         addGameObject(playerOne, columnToXCoordinate(0), rowToYCoordinate(37));
