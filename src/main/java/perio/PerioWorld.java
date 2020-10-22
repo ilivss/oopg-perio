@@ -238,11 +238,17 @@ public class PerioWorld extends GameEngine {
         }
 
         // laat eindscherm zien wanneer spelers af zijn
-        if (playerOne.getHealth() == 0 || playerTwo.getHealth() == 0 || timerout <= 0 && gameState == GameState.RUNNING) {
+        if (playerOne.getHealth() == 0 || playerTwo.getHealth() == 0 || timerout <= 0 || Flag.up == true && gameState == GameState.RUNNING) {
             gameState = GameState.END;
             backgroundSound.pause();
 
-            endGameDashboardText.setText("Game over\n" + "Player one Punten: "+ playerOne.getPoints() + "\n" + "Player two Punten: " + playerTwo.getPoints()  + "\n" + "Resterende tijd: " + timerout + "\n" + "Totale score: " + (playerOne.getPoints() + playerTwo.getPoints() + timerout ) + "\nDruk op R om de game te herstarten" ) ;
+            if (Flag.up == true) {
+                if (getHighscore() < (playerOne.getPoints() + playerTwo.getPoints() + timerout ) ) {
+                    setHighscore(playerOne.getPoints() + playerTwo.getPoints() + timerout);
+                }
+            }
+
+            endGameDashboardText.setText("Game over\n" + "Player one Punten: "+ playerOne.getPoints() + "\n" + "Player two Punten: " + playerTwo.getPoints()  + "\n" + "Resterende tijd: " + timerout + "\n" + "Totale score: " + (playerOne.getPoints() + playerTwo.getPoints() + timerout ) + "\nHighscore: " + getHighscore() + "\nDruk op R om de game te herstarten" ) ;
 
             addDashboard(dashboardEndGame, 0, 0);
 
