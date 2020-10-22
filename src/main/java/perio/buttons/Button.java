@@ -12,7 +12,7 @@ import java.util.List;
 
 
 /**
- * @author Geurian Bouwman & Iliass El Kaddouri
+ * @author Geurian Bouw & Iliass El Kaddouri
  *
  * De abstracte knopklasse.
  */

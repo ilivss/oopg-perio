@@ -4,7 +4,7 @@ import nl.han.ica.oopg.objects.GameObject;
 import processing.core.PGraphics;
 
 /**
- * @author Geurian Bouwman & Iliass El Kaddouri
+ * @author Geurian Bouw & Iliass El Kaddouri
  *
  *  Een FollowObject is een object dat wordt gevolgd door de CenterFollowingViewPort.
  *  FollowObject volgt zelf allebei de Player objecten van het spel.

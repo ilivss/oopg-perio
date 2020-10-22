@@ -11,7 +11,7 @@ import perio.Player;
 import java.util.List;
 
 /**
- * @author Geurian Bouwman & Iliass El Kaddouri
+ * @author Geurian Bouw & Iliass El Kaddouri
  *
  * Lava is een spelobject dat lava representeert. Dit object kan botsen met een object van de klasse Player.
  * Een Player object verliest levens het collide met dit object.

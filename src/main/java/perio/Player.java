@@ -14,9 +14,10 @@ import processing.core.PVector;
 import java.util.List;
 
 /**
- * @author Geurian Bouwman & Iliass El Kaddouri
+ * @author Geurian Bouw & Iliass El Kaddouri
  *
- * Een PlayerObject is een object dat... TODO: Documentatie schrijven
+ * Een PlayerObject is een object dat de speler functies van het spel bevat.
+ * Hier worden alle speler denk daarbij aan het lopen en de interactie met andere spel objecten.
  */
 public class Player extends AnimatedSpriteObject implements ICollidableWithTiles {
     private enum Direction {
@@ -64,9 +65,9 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
     public void keyPressed(int keyCode, char key) {
         if (PerioWorld.gameState == PerioWorld.GameState.START && keyCode == 83){
             PerioWorld.gameState = PerioWorld.GameState.RUNNING;
-        } else if (PerioWorld.gameState == PerioWorld.GameState.END && keyCode == 82){
-            PerioWorld.gameState = PerioWorld.GameState.RUNNING;
-            world.setupGame();
+        }
+        if (PerioWorld.gameState == PerioWorld.GameState.END && keyCode == 83){
+            world.restartGame();
         }
 
         if (PerioWorld.gameState == PerioWorld.GameState.RUNNING) {

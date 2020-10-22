@@ -5,7 +5,7 @@ import nl.han.ica.oopg.sound.Sound;
 import perio.PerioWorld;
 import perio.Player;
 /**
- * @author Geurian Bouwman & Iliass El Kaddouri
+ * @author Geurian Bouw & Iliass El Kaddouri
  *
  * Een Frog is een spelobject dat zelfstanding door de wereld beweegt.
  * De beweging is horizontaal: van links naar recht of visa versa.

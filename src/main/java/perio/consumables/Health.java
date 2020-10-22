@@ -6,7 +6,7 @@ import perio.PerioWorld;
 import perio.Player;
 
 /**
- * @author Geurian Bouwman & Iliass El Kaddouri
+ * @author Geurian Bouw & Iliass El Kaddouri
  *
  * Een Health object kan worden 'geconsumeerd' door objecten van de spelerklasse.
  * Wanneer een speler een object van deze klasse consumeert ontvangt het 1 leven. Dit object zal zichzelf vervolgens verwijderen uit het spel.

@@ -11,7 +11,7 @@ import perio.Player;
 import java.util.List;
 
 /**
- * @author Geurian Bouwman & Iliass El Kaddouri
+ * @author Geurian Bouw & Iliass El Kaddouri
  *
  * Abstracte klasse die een consumable (verbruiksartikel) representeert.
  * Objecten die deze klasse implementeren kunnen worden geconsumeerd door objecten van de spelerklasse.

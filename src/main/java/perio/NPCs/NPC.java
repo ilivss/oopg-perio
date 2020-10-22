@@ -10,7 +10,7 @@ import perio.Player;
 import java.util.List;
 
 /**
- * @author Geurian Bouwman & Iliass El Kaddouri
+ * @author Geurian Bouw & Iliass El Kaddouri
  *
  * Een NPC is een spelobject dat zelfstanding door de wereld beweegt.
  * De beweging is horizontaal: van links naar recht of visa versa.

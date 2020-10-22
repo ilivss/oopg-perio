@@ -38,7 +38,8 @@ import java.util.ArrayList;
 /**
  * @author Geurian Bouwman & Iliass El Kaddouri
  *
- *  PerioWorld is een object dat... TODO: Documentatie schrijven
+ *  PerioWorld is een object dat de basis functies van het spel bevat.
+ *  Hier wordt het spel geinitaliseerd en worden de hoofd functies uitgevoerd
  */
 public class PerioWorld extends GameEngine {
     /**
@@ -188,10 +189,7 @@ public class PerioWorld extends GameEngine {
 
 
 >>>>>>> 00d76a9fee6254c6c381032ba3533ab1562bb7ac
-        // TODO: Stop game wanneer 1 vd 2 spelers dood gaat!
-        if (playerOne.getHealth() <= 0 || playerTwo.getHealth() <= 0) {
-            // stop game
-        }
+
     }
 
     /**

@@ -9,7 +9,7 @@ import perio.Player;
 import java.util.List;
 
 /**
- * @author Geurian Bouwman & Iliass El Kaddouri
+ * @author Geurian Bouw & Iliass El Kaddouri
  *
  * Een pushbutton is een spelobject dat geactiveert kan worden als en alleen als een object van de spelersklasse
  * er bovenop staat.

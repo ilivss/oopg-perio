@@ -36,9 +36,10 @@ import perio.tiles.LadderTile;
 import java.util.ArrayList;
 
 /**
- * @author Geurian Bouwman & Iliass El Kaddouri
+ * @author Geurian Bouw & Iliass El Kaddouri
  *
- *  PerioWorld is een object dat... TODO: Documentatie schrijven
+ *  PerioWorld is een object dat de basis functies van het spel bevat.
+ *  Hier wordt het spel geinitaliseerd en worden de hoofd functies uitgevoerd.
  */
 public class PerioWorld extends GameEngine {
     /**
@@ -134,6 +135,11 @@ public class PerioWorld extends GameEngine {
         timerout = endtime - (timer / 60);
     }
 
+    public void restartGame(){
+        deleteDashboard(dashboardEndGame);
+        gameState = GameState.RUNNING;
+    }
+
     @Override
     public void setupGame() {
         // Spel initialiseren
@@ -153,13 +159,7 @@ public class PerioWorld extends GameEngine {
         updateDashboard();
 
         if (gameState == GameState.RUNNING) {
-            deleteDashboard(dashboardEndGame);
             timer();
-        }
-
-        // TODO: Stop game wanneer 1 vd 2 spelers dood gaat!
-        if (playerOne.getHealth() <= 0 || playerTwo.getHealth() <= 0) {
-            // stop game
         }
     }
 
@@ -218,12 +218,9 @@ public class PerioWorld extends GameEngine {
         dashboardPlayerOne.addGameObject(playerOneDashboardText);
         dashboardPlayerTwo.addGameObject(playerTwoDashboardText);
 
-
-        addDashboard(dashboardStartGame, 0, 0);
         addDashboard(dashboardPlayerOne, 0, 0);
         addDashboard(dashboardPlayerTwo, ZOOMWIDTH / 2, 0);
         addDashboard(dashboardStartGame, 0, 0);
-
     }
 
     /**
@@ -235,13 +232,17 @@ public class PerioWorld extends GameEngine {
 
         if (gameState == GameState.RUNNING) {
             deleteDashboard(dashboardStartGame);
-            deleteDashboard(dashboardEndGame);
         }
 
         // laat eindscherm zien wanneer spelers af zijn
-        if (playerOne.getHealth() == 0 || playerTwo.getHealth() == 0 || timerout <= 0) {
+        if (playerOne.getHealth() == 0 || playerTwo.getHealth() == 0 || timerout <= 0 && gameState == GameState.RUNNING) {
+            //Respawnd de spelers zodat het spel herstart kan worden
+            deleteAllGameOBjects();
+            initGameObjects();
+
             gameState = GameState.END;
             backgroundSound.pause();
+
             endGameDashboardText.setText("Game over\n" + "Player one Punten: "+ playerOne.getPoints() + "\n" + "Player two Punten: " + playerTwo.getPoints() + "\n" + "Druk op R om de game te herstarten");
 
 

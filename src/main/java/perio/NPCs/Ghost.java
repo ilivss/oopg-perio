@@ -6,7 +6,7 @@ import perio.PerioWorld;
 import perio.Player;
 
 /**
- * @author Geurian Bouwman & Iliass El Kaddouri
+ * @author Geurian Bouw & Iliass El Kaddouri
  *
  * Een Ghost is een spelobject dat zelfstanding door de wereld beweegt.
  * De beweging is horizontaal: van links naar recht of visa versa.

@@ -12,7 +12,7 @@ import perio.Player;
 import java.util.List;
 
 /**
- * @author Geurian Bouwman & Iliass El Kaddouri
+ * @author Geurian Bouw & Iliass El Kaddouri
  *
  * Een Lift is een spelobject dat horizontaal in de wereld beweegt, deze actie kan geactiveerd worden door handleTarget() aan te roepen.
  */
