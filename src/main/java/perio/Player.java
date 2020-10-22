@@ -66,7 +66,7 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
         if (PerioWorld.gameState == PerioWorld.GameState.START && keyCode == 83){
             PerioWorld.gameState = PerioWorld.GameState.RUNNING;
         }
-        if (PerioWorld.gameState == PerioWorld.GameState.END && keyCode == 83){
+        if (PerioWorld.gameState == PerioWorld.GameState.END && keyCode == 82){
             world.restartGame();
         }
 

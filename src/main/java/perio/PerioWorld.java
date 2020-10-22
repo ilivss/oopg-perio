@@ -135,9 +135,12 @@ public class PerioWorld extends GameEngine {
         timerout = endtime - (timer / 60);
     }
 
+    /**
+     * Handeld het herstarten van het spel af
+     */
     public void restartGame(){
-        deleteDashboard(dashboardEndGame);
         gameState = GameState.RUNNING;
+        deleteDashboard(dashboardEndGame);
     }
 
     @Override
@@ -236,17 +239,16 @@ public class PerioWorld extends GameEngine {
 
         // laat eindscherm zien wanneer spelers af zijn
         if (playerOne.getHealth() == 0 || playerTwo.getHealth() == 0 || timerout <= 0 && gameState == GameState.RUNNING) {
-            //Respawnd de spelers zodat het spel herstart kan worden
-            deleteAllGameOBjects();
-            initGameObjects();
-
             gameState = GameState.END;
             backgroundSound.pause();
 
-            endGameDashboardText.setText("Game over\n" + "Player one Punten: "+ playerOne.getPoints() + "\n" + "Player two Punten: " + playerTwo.getPoints() + "\n" + "Druk op R om de game te herstarten");
-
+            endGameDashboardText.setText("Game over\n" + "Player one Punten: "+ playerOne.getPoints() + "\n" + "Player two Punten: " + playerTwo.getPoints()  + "\n" + "Resterende tijd: " + timerout + "\n" + "Totale score: " + (playerOne.getPoints() + playerTwo.getPoints() + timerout ) + "\nDruk op R om de game te herstarten" ) ;
 
             addDashboard(dashboardEndGame, 0, 0);
+
+            //Respawn de spelers zodat het spel herstart kan worden
+            deleteAllGameOBjects();
+            initGameObjects();
         }
     }
 
@@ -316,8 +318,6 @@ public class PerioWorld extends GameEngine {
         addGameObject(consumables.get(21), columnToXCoordinate(0), rowToYCoordinate(23));
         addGameObject(consumables.get(22), columnToXCoordinate(11), rowToYCoordinate(16));
         addGameObject(consumables.get(23), columnToXCoordinate(0), rowToYCoordinate(0));
-
-
 
         // Buttons
         buttons = new ArrayList<>();
