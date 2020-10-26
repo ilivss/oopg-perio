@@ -51,6 +51,7 @@ public class PerioWorld extends GameEngine {
         START,
         RUNNING,
         END,
+        FLAGUP,
     }
 
     // Global variabelen
@@ -239,8 +240,13 @@ public class PerioWorld extends GameEngine {
         }
 
         // laat eindscherm zien wanneer spelers af zijn
-        if (playerOne.getHealth() == 0 || playerTwo.getHealth() == 0 || timerout <= 0 && gameState == GameState.RUNNING) {
-            String gameEnd = "Game over probeer opnieuw";
+        if ((playerOne.getHealth() == 0 || playerTwo.getHealth() == 0 || timerout <= 0 && gameState == GameState.RUNNING) || ( gameState == GameState.FLAGUP) ) {
+            String gameEnd;
+            if ( gameState == GameState.FLAGUP ) {
+               gameEnd = "Einde gehaald vlag is opgehaald";
+            } else {
+                gameEnd = "Game over probeer opnieuw";
+            }
             gameState = GameState.END;
             backgroundSound.pause();
 
@@ -253,6 +259,9 @@ public class PerioWorld extends GameEngine {
             //Respawn de spelers zodat het spel herstart kan worden
             deleteAllGameOBjects();
             initGameObjects();
+
+            createViewWithViewport();
+
         }
     }
 

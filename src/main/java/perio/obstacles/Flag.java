@@ -17,7 +17,7 @@ import java.util.Vector;
 public class Flag extends AnimatedSpriteObject implements IObstacle {
     private PerioWorld world;
     private Sound flagSound;
-    public static boolean up;
+    public boolean up;
 
     /**
      * Constructor
@@ -47,6 +47,7 @@ public class Flag extends AnimatedSpriteObject implements IObstacle {
             flagSound.rewind();
             flagSound.play();
             up = true;
+            PerioWorld.gameState = PerioWorld.GameState.FLAGUP;
 
         }
     }
