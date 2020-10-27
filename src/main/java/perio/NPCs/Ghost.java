@@ -41,6 +41,7 @@ public class Ghost extends NPC {
             player.setPoints(player.getPoints() + 2);
         } else {
             // Player verliest een leven.
+            player.setX(player.getX() + 100);
             player.setHealth(player.getHealth() - 1);
         }
     }

@@ -20,7 +20,7 @@ public class NPC extends AnimatedSpriteObject implements ICollidableWithGameObje
     private float leftBoundary;
     private float rightBoundary;
     private float speed;
-    private boolean alive;
+    private boolean isAlive;
 
     /**
      * Constructor
@@ -37,7 +37,7 @@ public class NPC extends AnimatedSpriteObject implements ICollidableWithGameObje
         this.leftBoundary = leftBoundary;
         this.rightBoundary = rightBoundary;
         this.speed = speed;
-        this.alive = true;
+        this.isAlive = true;
     }
 
     /**
@@ -69,13 +69,19 @@ public class NPC extends AnimatedSpriteObject implements ICollidableWithGameObje
         setSpeed(0);
     }
 
+    protected void kill() {
+        isAlive = false;
+        setCurrentFrameIndex(2);
+        setSpeed(0);
+    }
+
     @Override
     public void update() {
         if (super.x <= leftBoundary && alive) {
             setCurrentFrameIndex(1);
             setDirectionSpeed(90, speed);
 
-        } else if (x >= rightBoundary && alive) {
+        } else if (x >= rightBoundary && isAlive) {
             setCurrentFrameIndex(0);
             setDirectionSpeed(270, speed);
         }
@@ -84,7 +90,7 @@ public class NPC extends AnimatedSpriteObject implements ICollidableWithGameObje
     @Override
     public void gameObjectCollisionOccurred(List<GameObject> collidedGameObjects) {
         for (GameObject go : collidedGameObjects) {
-            if (alive) {
+            if (isAlive) {
                 if (go instanceof Player) {
                     handleFight((Player) go);
                 }
