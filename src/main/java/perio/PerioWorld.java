@@ -243,6 +243,7 @@ public class PerioWorld extends GameEngine {
         if ((playerOne.getHealth() == 0 || playerTwo.getHealth() == 0 || timerout <= 0 && gameState == GameState.RUNNING) || ( gameState == GameState.FLAGUP) ) {
             if ( gameState == GameState.FLAGUP ) {
 
+                setHighscore(playerOne.getPoints() + playerTwo.getPoints() + timerout );
                 endGameDashboardText.setText( "Einde gehaald vlag is opgehaald" + "\n" + "Player one Punten: "+ playerOne.getPoints() + "\n" + "Player two Punten: " + playerTwo.getPoints()  + "\n" + "Resterende tijd: " + timerout + "\n" + "Totale score: " + (playerOne.getPoints() + playerTwo.getPoints() + timerout ) + "\nHighscore: " + getHighscore() + "\nDruk op R om de game te herstarten" ) ;
 
             } else {
