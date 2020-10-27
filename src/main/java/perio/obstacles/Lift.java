@@ -46,7 +46,6 @@ public class Lift extends SpriteObject implements ICollidableWithGameObjects, IO
      */
     @Override
     public void handleTarget() {
-        // TODO Fix geluid, hij wordt pas afgespeeld wanneer player van de knop afgaat, terwijl hij eigenlijk afgespeeld  moet worden wanneer hij erop staat
         // Ik weet  waarom dit is: deze method wordt  constant opgeroepen in update(); waardoor het geluidje constant gerewind wordt. Hoe kunnen we dit anders doen?
         liftSound.rewind();
         liftSound.play();

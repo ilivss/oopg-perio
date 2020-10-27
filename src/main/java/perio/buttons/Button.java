@@ -48,7 +48,6 @@ public abstract class Button extends AnimatedSpriteObject implements ICollidable
      * Speelt knop geluid af en voert de handleTarget() functie van elk doelwit van deze knop uit.
      */
     public void executeButtonAction() {
-        // TODO Fix geluid, hij wordt pas afgespeeld wanneer player van de knop afgaat, terwijl hij eigenlijk afgespeeld  moet worden wanneer hij erop staat
         // Ik weet  waarom dit is: deze method wordt  constant opgeroepen in update(); waardoor het geluidje constant gerewind wordt. Hoe kunnen we dit anders doen?
         buttonSound.rewind();
         buttonSound.play();
