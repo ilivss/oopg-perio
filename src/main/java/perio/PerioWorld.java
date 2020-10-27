@@ -14,7 +14,6 @@ import nl.han.ica.oopg.view.CenterFollowingViewport;
 import nl.han.ica.oopg.view.View;
 
 // Eigen classes
-import org.w3c.dom.Text;
 import perio.NPCs.Frog;
 import perio.NPCs.Ghost;
 import perio.NPCs.NPC;
@@ -33,7 +32,6 @@ import perio.tiles.DecorationTile;
 import perio.tiles.FloorTile;
 import perio.tiles.LadderTile;
 
-import java.sql.Struct;
 import java.util.ArrayList;
 
 /**
@@ -58,7 +56,7 @@ public class PerioWorld extends GameEngine {
     /**
      * Houdt bij welke state de game momenteel is. Maakt gebruik van enum GameState
      */
-    public static GameState gameState = GameState.START;
+    public static GameState GAMESTATE = GameState.START;
     /**
      * Deze variabele maakt het makkelijker om te refereren naar media objecten in alle klassen.
      * Gebruik: MEDIA_PATH.concat("path/to/media/file.png")
@@ -141,14 +139,14 @@ public class PerioWorld extends GameEngine {
      * Handeld het herstarten van het spel af
      */
     public void restartGame(){
-        gameState = GameState.RUNNING;
+        GAMESTATE = GameState.RUNNING;
         deleteDashboard(dashboardEndGame);
     }
 
     @Override
     public void setupGame() {
         // Spel initialiseren
-        gameState = GameState.START;
+        GAMESTATE = GameState.START;
 
         initSound();
         initDashboard();
@@ -163,7 +161,7 @@ public class PerioWorld extends GameEngine {
     public void update() {
         updateDashboard();
 
-        if (gameState == GameState.RUNNING) {
+        if (GAMESTATE == GameState.RUNNING) {
             timer();
         }
     }
@@ -235,13 +233,13 @@ public class PerioWorld extends GameEngine {
         playerOneDashboardText.setText("Player One\n" + "Levens: " + playerOne.getHealth() + "\n" + "Punten: " + playerOne.getPoints() + "\n" + "Highscore: " + getHighscore() + "\n" + "Timer: " + timerout);
         playerTwoDashboardText.setText("Player Two\n" + "Levens: " + playerTwo.getHealth() + "\n" + "Punten: " + playerTwo.getPoints());
 
-        if (gameState == GameState.RUNNING) {
+        if (GAMESTATE == GameState.RUNNING) {
             deleteDashboard(dashboardStartGame);
         }
 
         // laat eindscherm zien wanneer spelers af zijn
-        if ((playerOne.getHealth() == 0 || playerTwo.getHealth() == 0 || timerout <= 0 && gameState == GameState.RUNNING) || ( gameState == GameState.FLAGUP) ) {
-            if ( gameState == GameState.FLAGUP ) {
+        if ((playerOne.getHealth() == 0 || playerTwo.getHealth() == 0 || timerout <= 0 && GAMESTATE == GameState.RUNNING) || ( GAMESTATE == GameState.FLAGUP) ) {
+            if ( GAMESTATE == GameState.FLAGUP ) {
 
                 setHighscore(playerOne.getPoints() + playerTwo.getPoints() + timerout );
                 endGameDashboardText.setText( "Einde gehaald vlag is opgehaald" + "\n" + "Player one Punten: "+ playerOne.getPoints() + "\n" + "Player two Punten: " + playerTwo.getPoints()  + "\n" + "Resterende tijd: " + timerout + "\n" + "Totale score: " + (playerOne.getPoints() + playerTwo.getPoints() + timerout ) + "\nHighscore: " + getHighscore() + "\nDruk op R om de game te herstarten" ) ;
@@ -251,7 +249,7 @@ public class PerioWorld extends GameEngine {
                 endGameDashboardText.setText( "Game over probeer opnieuw" + "\n" + "Player one Punten: "+ playerOne.getPoints() + "\n" + "Player two Punten: " + playerTwo.getPoints()  + "\n" + "Resterende tijd: " + timerout + "\nDruk op R om de game te herstarten" ) ;
 
             }
-            gameState = GameState.END;
+            GAMESTATE = GameState.END;
             backgroundSound.pause();
 
             addDashboard(dashboardEndGame, 0, 0);

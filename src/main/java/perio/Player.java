@@ -17,7 +17,7 @@ import java.util.List;
  * @author Geurian Bouw & Iliass El Kaddouri
  *
  * Een PlayerObject is een object dat de speler functies van het spel bevat.
- * Hier worden alle speler denk daarbij aan het lopen en de interactie met andere spel objecten.
+ * Hier worden alle speler functionalitetiten bepaald denk daarbij aan het lopen en de interactie met andere spel objecten.
  */
 public class Player extends AnimatedSpriteObject implements ICollidableWithTiles {
     private enum Direction {
@@ -63,14 +63,14 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
 
     @Override
     public void keyPressed(int keyCode, char key) {
-        if (PerioWorld.gameState == PerioWorld.GameState.START && keyCode == 83){
-            PerioWorld.gameState = PerioWorld.GameState.RUNNING;
+        if (PerioWorld.GAMESTATE == PerioWorld.GameState.START && keyCode == 83){
+            PerioWorld.GAMESTATE = PerioWorld.GameState.RUNNING;
         }
-        if (PerioWorld.gameState == PerioWorld.GameState.END && keyCode == 82){
+        if (PerioWorld.GAMESTATE == PerioWorld.GameState.END && keyCode == 82){
             world.restartGame();
         }
 
-        if (PerioWorld.gameState == PerioWorld.GameState.RUNNING) {
+        if (PerioWorld.GAMESTATE == PerioWorld.GameState.RUNNING) {
             // Controls Player 1
             if (keyCode == world.UP && playerNo == 1) {
                 direction = Direction.UP;
@@ -249,6 +249,7 @@ public class Player extends AnimatedSpriteObject implements ICollidableWithTiles
 
     /**
      * Verandert het aantal levenpunten dat dit object heeft naar de meegegeven waarde.
+     * Controlleert ook of de speler nog levend is.
      * @param health    levenspunten als integer.
      */
     public void setHealth(int health) {

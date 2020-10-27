@@ -47,7 +47,7 @@ public class Flag extends AnimatedSpriteObject implements IObstacle {
             flagSound.rewind();
             flagSound.play();
             up = true;
-            PerioWorld.gameState = PerioWorld.GameState.FLAGUP;
+            PerioWorld.GAMESTATE = PerioWorld.GameState.FLAGUP;
 
         }
     }
