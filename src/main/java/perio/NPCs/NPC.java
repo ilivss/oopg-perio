@@ -7,11 +7,12 @@ import nl.han.ica.oopg.objects.Sprite;
 import nl.han.ica.oopg.sound.Sound;
 import perio.PerioWorld;
 import perio.Player;
+
 import java.util.List;
 
 /**
  * @author Geurian Bouw & Iliass El Kaddouri
- *
+ * <p>
  * Een NPC is een spelobject dat zelfstanding door de wereld beweegt.
  * De beweging is horizontaal: van links naar recht of visa versa.
  */
@@ -25,11 +26,11 @@ public class NPC extends AnimatedSpriteObject implements ICollidableWithGameObje
     /**
      * Constructor
      *
-     * @param sprite            Sprite die gebruikt moet worden
-     * @param NPCSound          Geluid dat moet klinken wanneer een NPC object 'gedood' wordt.
-     * @param leftBoundary      Float die de linkergrens waarin dit object kan bewegen aangeeft.
-     * @param rightBoundary     Float die de rechtergrens waarin dit object kan bewegen aangeeft.
-     * @param speed             Snelheid waarmee de NPC zich voorbeweegt.
+     * @param sprite        Sprite die gebruikt moet worden
+     * @param NPCSound      Geluid dat moet klinken wanneer een NPC object 'gedood' wordt.
+     * @param leftBoundary  Float die de linkergrens waarin dit object kan bewegen aangeeft.
+     * @param rightBoundary Float die de rechtergrens waarin dit object kan bewegen aangeeft.
+     * @param speed         Snelheid waarmee de NPC zich voorbeweegt.
      */
     public NPC(Sprite sprite, Sound NPCSound, float leftBoundary, float rightBoundary, float speed) {
         super(sprite, 3);
@@ -44,7 +45,7 @@ public class NPC extends AnimatedSpriteObject implements ICollidableWithGameObje
      * Speler object wordt afhankelijk van de beweeg richting van de NPC links of rechts verschoven.
      * Deze functie wordt opgeroepen wanneer een Speler object collide met een object van deze klasse.
      *
-     * @param player    Speler die met het NPC object collide.
+     * @param player Speler die met het NPC object collide.
      */
     protected void handleFight(Player player) {
         // Player word terug gezet als hij de ghost raakt
@@ -64,20 +65,14 @@ public class NPC extends AnimatedSpriteObject implements ICollidableWithGameObje
         NPCSound.rewind();
         NPCSound.play();
 
-        alive = false;
-        setCurrentFrameIndex(2);
-        setSpeed(0);
-    }
-
-    protected void kill() {
         isAlive = false;
         setCurrentFrameIndex(2);
         setSpeed(0);
     }
-
+    
     @Override
     public void update() {
-        if (super.x <= leftBoundary && alive) {
+        if (super.x <= leftBoundary && isAlive) {
             setCurrentFrameIndex(1);
             setDirectionSpeed(90, speed);
 
